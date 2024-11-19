@@ -2877,6 +2877,8 @@ instance Control.DeepSeq.NFData HistogramDataPoint where
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.name' @:: Lens' Metric Data.Text.Text@
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.description' @:: Lens' Metric Data.Text.Text@
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.unit' @:: Lens' Metric Data.Text.Text@
+         * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.metadata' @:: Lens' Metric [Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue]@
+         * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.vec'metadata' @:: Lens' Metric (Data.Vector.Vector Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue)@
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.maybe'data'' @:: Lens' Metric (Prelude.Maybe Metric'Data)@
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.maybe'gauge' @:: Lens' Metric (Prelude.Maybe Gauge)@
          * 'Proto.Opentelemetry.Proto.Metrics.V1.Metrics_Fields.gauge' @:: Lens' Metric Gauge@
@@ -2892,6 +2894,7 @@ data Metric
   = Metric'_constructor {_Metric'name :: !Data.Text.Text,
                          _Metric'description :: !Data.Text.Text,
                          _Metric'unit :: !Data.Text.Text,
+                         _Metric'metadata :: !(Data.Vector.Vector Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue),
                          _Metric'data' :: !(Prelude.Maybe Metric'Data),
                          _Metric'_unknownFields :: !Data.ProtoLens.FieldSet}
   deriving stock (Prelude.Eq, Prelude.Ord)
@@ -2925,6 +2928,20 @@ instance Data.ProtoLens.Field.HasField Metric "unit" Data.Text.Text where
     = (Prelude..)
         (Lens.Family2.Unchecked.lens
            _Metric'unit (\ x__ y__ -> x__ {_Metric'unit = y__}))
+        Prelude.id
+instance Data.ProtoLens.Field.HasField Metric "metadata" [Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue] where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _Metric'metadata (\ x__ y__ -> x__ {_Metric'metadata = y__}))
+        (Lens.Family2.Unchecked.lens
+           Data.Vector.Generic.toList
+           (\ _ y__ -> Data.Vector.Generic.fromList y__))
+instance Data.ProtoLens.Field.HasField Metric "vec'metadata" (Data.Vector.Vector Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue) where
+  fieldOf _
+    = (Prelude..)
+        (Lens.Family2.Unchecked.lens
+           _Metric'metadata (\ x__ y__ -> x__ {_Metric'metadata = y__}))
         Prelude.id
 instance Data.ProtoLens.Field.HasField Metric "maybe'data'" (Prelude.Maybe Metric'Data) where
   fieldOf _
@@ -3068,7 +3085,8 @@ instance Data.ProtoLens.Message Metric where
       \\thistogram\CAN\t \SOH(\v2).opentelemetry.proto.metrics.v1.HistogramH\NULR\thistogram\DC2k\n\
       \\NAKexponential_histogram\CAN\n\
       \ \SOH(\v24.opentelemetry.proto.metrics.v1.ExponentialHistogramH\NULR\DC4exponentialHistogram\DC2C\n\
-      \\asummary\CAN\v \SOH(\v2'.opentelemetry.proto.metrics.v1.SummaryH\NULR\asummaryB\ACK\n\
+      \\asummary\CAN\v \SOH(\v2'.opentelemetry.proto.metrics.v1.SummaryH\NULR\asummary\DC2C\n\
+      \\bmetadata\CAN\f \ETX(\v2'.opentelemetry.proto.common.v1.KeyValueR\bmetadataB\ACK\n\
       \\EOTdataJ\EOT\b\EOT\DLE\ENQJ\EOT\b\ACK\DLE\aJ\EOT\b\b\DLE\t"
   packedFileDescriptor _ = packedFileDescriptor
   fieldsByTag
@@ -3097,6 +3115,15 @@ instance Data.ProtoLens.Message Metric where
                  Data.ProtoLens.FieldTypeDescriptor Data.Text.Text)
               (Data.ProtoLens.PlainField
                  Data.ProtoLens.Optional (Data.ProtoLens.Field.field @"unit")) ::
+              Data.ProtoLens.FieldDescriptor Metric
+        metadata__field_descriptor
+          = Data.ProtoLens.FieldDescriptor
+              "metadata"
+              (Data.ProtoLens.MessageField Data.ProtoLens.MessageType ::
+                 Data.ProtoLens.FieldTypeDescriptor Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue)
+              (Data.ProtoLens.RepeatedField
+                 Data.ProtoLens.Unpacked
+                 (Data.ProtoLens.Field.field @"metadata")) ::
               Data.ProtoLens.FieldDescriptor Metric
         gauge__field_descriptor
           = Data.ProtoLens.FieldDescriptor
@@ -3143,6 +3170,7 @@ instance Data.ProtoLens.Message Metric where
           [(Data.ProtoLens.Tag 1, name__field_descriptor),
            (Data.ProtoLens.Tag 2, description__field_descriptor),
            (Data.ProtoLens.Tag 3, unit__field_descriptor),
+           (Data.ProtoLens.Tag 12, metadata__field_descriptor),
            (Data.ProtoLens.Tag 5, gauge__field_descriptor),
            (Data.ProtoLens.Tag 7, sum__field_descriptor),
            (Data.ProtoLens.Tag 9, histogram__field_descriptor),
@@ -3157,14 +3185,21 @@ instance Data.ProtoLens.Message Metric where
         {_Metric'name = Data.ProtoLens.fieldDefault,
          _Metric'description = Data.ProtoLens.fieldDefault,
          _Metric'unit = Data.ProtoLens.fieldDefault,
+         _Metric'metadata = Data.Vector.Generic.empty,
          _Metric'data' = Prelude.Nothing, _Metric'_unknownFields = []}
   parseMessage
     = let
-        loop :: Metric -> Data.ProtoLens.Encoding.Bytes.Parser Metric
-        loop x
+        loop ::
+          Metric
+          -> Data.ProtoLens.Encoding.Growing.Growing Data.Vector.Vector Data.ProtoLens.Encoding.Growing.RealWorld Proto.Opentelemetry.Proto.Common.V1.Common.KeyValue
+             -> Data.ProtoLens.Encoding.Bytes.Parser Metric
+        loop x mutable'metadata
           = do end <- Data.ProtoLens.Encoding.Bytes.atEnd
                if end then
-                   do (let missing = []
+                   do frozen'metadata <- Data.ProtoLens.Encoding.Parser.Unsafe.unsafeLiftIO
+                                           (Data.ProtoLens.Encoding.Growing.unsafeFreeze
+                                              mutable'metadata)
+                      (let missing = []
                        in
                          if Prelude.null missing then
                              Prelude.return ()
@@ -3175,7 +3210,9 @@ instance Data.ProtoLens.Message Metric where
                                   (Prelude.show (missing :: [Prelude.String]))))
                       Prelude.return
                         (Lens.Family2.over
-                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t) x)
+                           Data.ProtoLens.unknownFields (\ !t -> Prelude.reverse t)
+                           (Lens.Family2.set
+                              (Data.ProtoLens.Field.field @"vec'metadata") frozen'metadata x))
                else
                    do tag <- Data.ProtoLens.Encoding.Bytes.getVarInt
                       case tag of
@@ -3185,7 +3222,9 @@ instance Data.ProtoLens.Message Metric where
                                            Data.ProtoLens.Encoding.Bytes.getText
                                              (Prelude.fromIntegral len))
                                        "name"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"name") y x)
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"name") y x)
+                                  mutable'metadata
                         18
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
@@ -3194,27 +3233,44 @@ instance Data.ProtoLens.Message Metric where
                                        "description"
                                 loop
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"description") y x)
+                                  mutable'metadata
                         26
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.getText
                                              (Prelude.fromIntegral len))
                                        "unit"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"unit") y x)
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"unit") y x)
+                                  mutable'metadata
+                        98
+                          -> do !y <- (Data.ProtoLens.Encoding.Bytes.<?>)
+                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
+                                            Data.ProtoLens.Encoding.Bytes.isolate
+                                              (Prelude.fromIntegral len)
+                                              Data.ProtoLens.parseMessage)
+                                        "metadata"
+                                v <- Data.ProtoLens.Encoding.Parser.Unsafe.unsafeLiftIO
+                                       (Data.ProtoLens.Encoding.Growing.append mutable'metadata y)
+                                loop x v
                         42
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
                                              (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
                                        "gauge"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"gauge") y x)
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"gauge") y x)
+                                  mutable'metadata
                         58
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
                                              (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
                                        "sum"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"sum") y x)
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"sum") y x)
+                                  mutable'metadata
                         74
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
@@ -3223,6 +3279,7 @@ instance Data.ProtoLens.Message Metric where
                                        "histogram"
                                 loop
                                   (Lens.Family2.set (Data.ProtoLens.Field.field @"histogram") y x)
+                                  mutable'metadata
                         82
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
@@ -3232,22 +3289,29 @@ instance Data.ProtoLens.Message Metric where
                                 loop
                                   (Lens.Family2.set
                                      (Data.ProtoLens.Field.field @"exponentialHistogram") y x)
+                                  mutable'metadata
                         90
                           -> do y <- (Data.ProtoLens.Encoding.Bytes.<?>)
                                        (do len <- Data.ProtoLens.Encoding.Bytes.getVarInt
                                            Data.ProtoLens.Encoding.Bytes.isolate
                                              (Prelude.fromIntegral len) Data.ProtoLens.parseMessage)
                                        "summary"
-                                loop (Lens.Family2.set (Data.ProtoLens.Field.field @"summary") y x)
+                                loop
+                                  (Lens.Family2.set (Data.ProtoLens.Field.field @"summary") y x)
+                                  mutable'metadata
                         wire
                           -> do !y <- Data.ProtoLens.Encoding.Wire.parseTaggedValueFromWire
                                         wire
                                 loop
                                   (Lens.Family2.over
                                      Data.ProtoLens.unknownFields (\ !t -> (:) y t) x)
+                                  mutable'metadata
       in
         (Data.ProtoLens.Encoding.Bytes.<?>)
-          (do loop Data.ProtoLens.defMessage) "Metric"
+          (do mutable'metadata <- Data.ProtoLens.Encoding.Parser.Unsafe.unsafeLiftIO
+                                    Data.ProtoLens.Encoding.Growing.new
+              loop Data.ProtoLens.defMessage mutable'metadata)
+          "Metric"
   buildMessage
     = \ _x
         -> (Data.Monoid.<>)
@@ -3298,62 +3362,76 @@ instance Data.ProtoLens.Message Metric where
                                        (Data.ProtoLens.Encoding.Bytes.putBytes bs))
                                Data.Text.Encoding.encodeUtf8 _v))
                    ((Data.Monoid.<>)
-                      (case
-                           Lens.Family2.view (Data.ProtoLens.Field.field @"maybe'data'") _x
-                       of
-                         Prelude.Nothing -> Data.Monoid.mempty
-                         (Prelude.Just (Metric'Gauge v))
-                           -> (Data.Monoid.<>)
-                                (Data.ProtoLens.Encoding.Bytes.putVarInt 42)
-                                ((Prelude..)
-                                   (\ bs
-                                      -> (Data.Monoid.<>)
-                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                              (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                           (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                   Data.ProtoLens.encodeMessage v)
-                         (Prelude.Just (Metric'Sum v))
-                           -> (Data.Monoid.<>)
-                                (Data.ProtoLens.Encoding.Bytes.putVarInt 58)
-                                ((Prelude..)
-                                   (\ bs
-                                      -> (Data.Monoid.<>)
-                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                              (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                           (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                   Data.ProtoLens.encodeMessage v)
-                         (Prelude.Just (Metric'Histogram v))
-                           -> (Data.Monoid.<>)
-                                (Data.ProtoLens.Encoding.Bytes.putVarInt 74)
-                                ((Prelude..)
-                                   (\ bs
-                                      -> (Data.Monoid.<>)
-                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                              (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                           (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                   Data.ProtoLens.encodeMessage v)
-                         (Prelude.Just (Metric'ExponentialHistogram v))
-                           -> (Data.Monoid.<>)
-                                (Data.ProtoLens.Encoding.Bytes.putVarInt 82)
-                                ((Prelude..)
-                                   (\ bs
-                                      -> (Data.Monoid.<>)
-                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                              (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                           (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                   Data.ProtoLens.encodeMessage v)
-                         (Prelude.Just (Metric'Summary v))
-                           -> (Data.Monoid.<>)
-                                (Data.ProtoLens.Encoding.Bytes.putVarInt 90)
-                                ((Prelude..)
-                                   (\ bs
-                                      -> (Data.Monoid.<>)
-                                           (Data.ProtoLens.Encoding.Bytes.putVarInt
-                                              (Prelude.fromIntegral (Data.ByteString.length bs)))
-                                           (Data.ProtoLens.Encoding.Bytes.putBytes bs))
-                                   Data.ProtoLens.encodeMessage v))
-                      (Data.ProtoLens.Encoding.Wire.buildFieldSet
-                         (Lens.Family2.view Data.ProtoLens.unknownFields _x)))))
+                      (Data.ProtoLens.Encoding.Bytes.foldMapBuilder
+                         (\ _v
+                            -> (Data.Monoid.<>)
+                                 (Data.ProtoLens.Encoding.Bytes.putVarInt 98)
+                                 ((Prelude..)
+                                    (\ bs
+                                       -> (Data.Monoid.<>)
+                                            (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                               (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                            (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                    Data.ProtoLens.encodeMessage _v))
+                         (Lens.Family2.view
+                            (Data.ProtoLens.Field.field @"vec'metadata") _x))
+                      ((Data.Monoid.<>)
+                         (case
+                              Lens.Family2.view (Data.ProtoLens.Field.field @"maybe'data'") _x
+                          of
+                            Prelude.Nothing -> Data.Monoid.mempty
+                            (Prelude.Just (Metric'Gauge v))
+                              -> (Data.Monoid.<>)
+                                   (Data.ProtoLens.Encoding.Bytes.putVarInt 42)
+                                   ((Prelude..)
+                                      (\ bs
+                                         -> (Data.Monoid.<>)
+                                              (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                 (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                              (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                      Data.ProtoLens.encodeMessage v)
+                            (Prelude.Just (Metric'Sum v))
+                              -> (Data.Monoid.<>)
+                                   (Data.ProtoLens.Encoding.Bytes.putVarInt 58)
+                                   ((Prelude..)
+                                      (\ bs
+                                         -> (Data.Monoid.<>)
+                                              (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                 (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                              (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                      Data.ProtoLens.encodeMessage v)
+                            (Prelude.Just (Metric'Histogram v))
+                              -> (Data.Monoid.<>)
+                                   (Data.ProtoLens.Encoding.Bytes.putVarInt 74)
+                                   ((Prelude..)
+                                      (\ bs
+                                         -> (Data.Monoid.<>)
+                                              (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                 (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                              (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                      Data.ProtoLens.encodeMessage v)
+                            (Prelude.Just (Metric'ExponentialHistogram v))
+                              -> (Data.Monoid.<>)
+                                   (Data.ProtoLens.Encoding.Bytes.putVarInt 82)
+                                   ((Prelude..)
+                                      (\ bs
+                                         -> (Data.Monoid.<>)
+                                              (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                 (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                              (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                      Data.ProtoLens.encodeMessage v)
+                            (Prelude.Just (Metric'Summary v))
+                              -> (Data.Monoid.<>)
+                                   (Data.ProtoLens.Encoding.Bytes.putVarInt 90)
+                                   ((Prelude..)
+                                      (\ bs
+                                         -> (Data.Monoid.<>)
+                                              (Data.ProtoLens.Encoding.Bytes.putVarInt
+                                                 (Prelude.fromIntegral (Data.ByteString.length bs)))
+                                              (Data.ProtoLens.Encoding.Bytes.putBytes bs))
+                                      Data.ProtoLens.encodeMessage v))
+                         (Data.ProtoLens.Encoding.Wire.buildFieldSet
+                            (Lens.Family2.view Data.ProtoLens.unknownFields _x))))))
 instance Control.DeepSeq.NFData Metric where
   rnf
     = \ x__
@@ -3365,7 +3443,9 @@ instance Control.DeepSeq.NFData Metric where
                    (_Metric'description x__)
                    (Control.DeepSeq.deepseq
                       (_Metric'unit x__)
-                      (Control.DeepSeq.deepseq (_Metric'data' x__) ()))))
+                      (Control.DeepSeq.deepseq
+                         (_Metric'metadata x__)
+                         (Control.DeepSeq.deepseq (_Metric'data' x__) ())))))
 instance Control.DeepSeq.NFData Metric'Data where
   rnf (Metric'Gauge x__) = Control.DeepSeq.rnf x__
   rnf (Metric'Sum x__) = Control.DeepSeq.rnf x__
@@ -5464,7 +5544,7 @@ packedFileDescriptor
     \\ENQscope\CAN\SOH \SOH(\v23.opentelemetry.proto.common.v1.InstrumentationScopeR\ENQscope\DC2@\n\
     \\ametrics\CAN\STX \ETX(\v2&.opentelemetry.proto.metrics.v1.MetricR\ametrics\DC2\GS\n\
     \\n\
-    \schema_url\CAN\ETX \SOH(\tR\tschemaUrl\"\225\ETX\n\
+    \schema_url\CAN\ETX \SOH(\tR\tschemaUrl\"\166\EOT\n\
     \\ACKMetric\DC2\DC2\n\
     \\EOTname\CAN\SOH \SOH(\tR\EOTname\DC2 \n\
     \\vdescription\CAN\STX \SOH(\tR\vdescription\DC2\DC2\n\
@@ -5474,7 +5554,8 @@ packedFileDescriptor
     \\thistogram\CAN\t \SOH(\v2).opentelemetry.proto.metrics.v1.HistogramH\NULR\thistogram\DC2k\n\
     \\NAKexponential_histogram\CAN\n\
     \ \SOH(\v24.opentelemetry.proto.metrics.v1.ExponentialHistogramH\NULR\DC4exponentialHistogram\DC2C\n\
-    \\asummary\CAN\v \SOH(\v2'.opentelemetry.proto.metrics.v1.SummaryH\NULR\asummaryB\ACK\n\
+    \\asummary\CAN\v \SOH(\v2'.opentelemetry.proto.metrics.v1.SummaryH\NULR\asummary\DC2C\n\
+    \\bmetadata\CAN\f \ETX(\v2'.opentelemetry.proto.common.v1.KeyValueR\bmetadataB\ACK\n\
     \\EOTdataJ\EOT\b\EOT\DLE\ENQJ\EOT\b\ACK\DLE\aJ\EOT\b\b\DLE\t\"Y\n\
     \\ENQGauge\DC2P\n\
     \\vdata_points\CAN\SOH \ETX(\v2/.opentelemetry.proto.metrics.v1.NumberDataPointR\n\
@@ -5577,8 +5658,8 @@ packedFileDescriptor
     \\SODataPointFlags\DC2\US\n\
     \\ESCDATA_POINT_FLAGS_DO_NOT_USE\DLE\NUL\DC2+\n\
     \'DATA_POINT_FLAGS_NO_RECORDED_VALUE_MASK\DLE\SOHB\DEL\n\
-    \!io.opentelemetry.proto.metrics.v1B\fMetricsProtoP\SOHZ)go.opentelemetry.io/proto/otlp/metrics/v1\170\STX\RSOpenTelemetry.Proto.Metrics.V1J\216\232\SOH\n\
-    \\a\DC2\ENQ\SO\NUL\163\ENQ\SOH\n\
+    \!io.opentelemetry.proto.metrics.v1B\fMetricsProtoP\SOHZ)go.opentelemetry.io/proto/otlp/metrics/v1\170\STX\RSOpenTelemetry.Proto.Metrics.V1J\143\239\SOH\n\
+    \\a\DC2\ENQ\SO\NUL\178\ENQ\SOH\n\
     \\200\EOT\n\
     \\SOH\f\DC2\ETX\SO\NUL\DC22\189\EOT Copyright 2019, OpenTelemetry Authors\n\
     \\n\
@@ -5653,7 +5734,7 @@ packedFileDescriptor
     \\f\n\
     \\ENQ\EOT\NUL\STX\NUL\ETX\DC2\ETX+./\n\
     \;\n\
-    \\STX\EOT\SOH\DC2\EOT/\NUL<\SOH\SUB/ A collection of ScopeMetrics from a Resource.\n\
+    \\STX\EOT\SOH\DC2\EOT/\NUL?\SOH\SUB/ A collection of ScopeMetrics from a Resource.\n\
     \\n\
     \\n\
     \\n\
@@ -5689,56 +5770,62 @@ packedFileDescriptor
     \\ENQ\EOT\SOH\STX\SOH\SOH\DC2\ETX7\CAN%\n\
     \\f\n\
     \\ENQ\EOT\SOH\STX\SOH\ETX\DC2\ETX7()\n\
-    \\175\SOH\n\
-    \\EOT\EOT\SOH\STX\STX\DC2\ETX;\STX\CAN\SUB\161\SOH This schema_url applies to the data in the \"resource\" field. It does not apply\n\
+    \\248\STX\n\
+    \\EOT\EOT\SOH\STX\STX\DC2\ETX>\STX\CAN\SUB\234\STX The Schema URL, if known. This is the identifier of the Schema that the resource data\n\
+    \ is recorded in. To learn more about Schema URL see\n\
+    \ https://opentelemetry.io/docs/specs/otel/schemas/#schema-url\n\
+    \ This schema_url applies to the data in the \"resource\" field. It does not apply\n\
     \ to the data in the \"scope_metrics\" field which have their own schema_url field.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\ENQ\DC2\ETX;\STX\b\n\
+    \\ENQ\EOT\SOH\STX\STX\ENQ\DC2\ETX>\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\SOH\DC2\ETX;\t\DC3\n\
+    \\ENQ\EOT\SOH\STX\STX\SOH\DC2\ETX>\t\DC3\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\ETX\DC2\ETX;\SYN\ETB\n\
+    \\ENQ\EOT\SOH\STX\STX\ETX\DC2\ETX>\SYN\ETB\n\
     \;\n\
-    \\STX\EOT\STX\DC2\EOT?\NULJ\SOH\SUB/ A collection of Metrics produced by an Scope.\n\
+    \\STX\EOT\STX\DC2\EOTB\NULP\SOH\SUB/ A collection of Metrics produced by an Scope.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\STX\SOH\DC2\ETX?\b\DC4\n\
+    \\ETX\EOT\STX\SOH\DC2\ETXB\b\DC4\n\
     \\207\SOH\n\
-    \\EOT\EOT\STX\STX\NUL\DC2\ETXC\STX?\SUB\193\SOH The instrumentation scope information for the metrics in this message.\n\
+    \\EOT\EOT\STX\STX\NUL\DC2\ETXF\STX?\SUB\193\SOH The instrumentation scope information for the metrics in this message.\n\
     \ Semantically when InstrumentationScope isn't set, it is equivalent with\n\
     \ an empty instrumentation scope name (unknown).\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETXC\STX4\n\
+    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETXF\STX4\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETXC5:\n\
+    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETXF5:\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETXC=>\n\
+    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETXF=>\n\
     \P\n\
-    \\EOT\EOT\STX\STX\SOH\DC2\ETXF\STX\RS\SUBC A list of metrics that originate from an instrumentation library.\n\
+    \\EOT\EOT\STX\STX\SOH\DC2\ETXI\STX\RS\SUBC A list of metrics that originate from an instrumentation library.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\EOT\DC2\ETXF\STX\n\
+    \\ENQ\EOT\STX\STX\SOH\EOT\DC2\ETXI\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETXF\v\DC1\n\
+    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETXI\v\DC1\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETXF\DC2\EM\n\
+    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETXI\DC2\EM\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETXF\FS\GS\n\
-    \M\n\
-    \\EOT\EOT\STX\STX\STX\DC2\ETXI\STX\CAN\SUB@ This schema_url applies to all metrics in the \"metrics\" field.\n\
+    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETXI\FS\GS\n\
+    \\149\STX\n\
+    \\EOT\EOT\STX\STX\STX\DC2\ETXO\STX\CAN\SUB\135\STX The Schema URL, if known. This is the identifier of the Schema that the metric data\n\
+    \ is recorded in. To learn more about Schema URL see\n\
+    \ https://opentelemetry.io/docs/specs/otel/schemas/#schema-url\n\
+    \ This schema_url applies to all metrics in the \"metrics\" field.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\ENQ\DC2\ETXI\STX\b\n\
+    \\ENQ\EOT\STX\STX\STX\ENQ\DC2\ETXO\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\SOH\DC2\ETXI\t\DC3\n\
+    \\ENQ\EOT\STX\STX\STX\SOH\DC2\ETXO\t\DC3\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\ETX\DC2\ETXI\SYN\ETB\n\
+    \\ENQ\EOT\STX\STX\STX\ETX\DC2\ETXO\SYN\ETB\n\
     \\175\GS\n\
-    \\STX\EOT\ETX\DC2\ACK\161\SOH\NUL\184\SOH\SOH\SUB\160\GS Defines a Metric which has one or more timeseries.  The following is a\n\
+    \\STX\EOT\ETX\DC2\ACK\167\SOH\NUL\199\SOH\SOH\SUB\160\GS Defines a Metric which has one or more timeseries.  The following is a\n\
     \ brief summary of the Metric data model.  For more details, see:\n\
     \\n\
     \   https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/metrics/data-model.md\n\
@@ -5825,105 +5912,123 @@ packedFileDescriptor
     \ strongly encouraged.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\ETX\SOH\DC2\EOT\161\SOH\b\SO\n\
+    \\ETX\EOT\ETX\SOH\DC2\EOT\167\SOH\b\SO\n\
     \\v\n\
-    \\ETX\EOT\ETX\t\DC2\EOT\162\SOH\STX\DC3\n\
+    \\ETX\EOT\ETX\t\DC2\EOT\168\SOH\STX\DC3\n\
     \\f\n\
-    \\EOT\EOT\ETX\t\NUL\DC2\EOT\162\SOH\v\f\n\
+    \\EOT\EOT\ETX\t\NUL\DC2\EOT\168\SOH\v\f\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\NUL\SOH\DC2\EOT\162\SOH\v\f\n\
+    \\ENQ\EOT\ETX\t\NUL\SOH\DC2\EOT\168\SOH\v\f\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\NUL\STX\DC2\EOT\162\SOH\v\f\n\
+    \\ENQ\EOT\ETX\t\NUL\STX\DC2\EOT\168\SOH\v\f\n\
     \\f\n\
-    \\EOT\EOT\ETX\t\SOH\DC2\EOT\162\SOH\SO\SI\n\
+    \\EOT\EOT\ETX\t\SOH\DC2\EOT\168\SOH\SO\SI\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\SOH\SOH\DC2\EOT\162\SOH\SO\SI\n\
+    \\ENQ\EOT\ETX\t\SOH\SOH\DC2\EOT\168\SOH\SO\SI\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\SOH\STX\DC2\EOT\162\SOH\SO\SI\n\
+    \\ENQ\EOT\ETX\t\SOH\STX\DC2\EOT\168\SOH\SO\SI\n\
     \\f\n\
-    \\EOT\EOT\ETX\t\STX\DC2\EOT\162\SOH\DC1\DC2\n\
+    \\EOT\EOT\ETX\t\STX\DC2\EOT\168\SOH\DC1\DC2\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\STX\SOH\DC2\EOT\162\SOH\DC1\DC2\n\
+    \\ENQ\EOT\ETX\t\STX\SOH\DC2\EOT\168\SOH\DC1\DC2\n\
     \\r\n\
-    \\ENQ\EOT\ETX\t\STX\STX\DC2\EOT\162\SOH\DC1\DC2\n\
-    \U\n\
-    \\EOT\EOT\ETX\STX\NUL\DC2\EOT\165\SOH\STX\DC2\SUBG name of the metric, including its DNS name prefix. It must be unique.\n\
+    \\ENQ\EOT\ETX\t\STX\STX\DC2\EOT\168\SOH\DC1\DC2\n\
+    \#\n\
+    \\EOT\EOT\ETX\STX\NUL\DC2\EOT\171\SOH\STX\DC2\SUB\NAK name of the metric.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\ENQ\DC2\EOT\165\SOH\STX\b\n\
+    \\ENQ\EOT\ETX\STX\NUL\ENQ\DC2\EOT\171\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\EOT\165\SOH\t\r\n\
+    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\EOT\171\SOH\t\r\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\EOT\165\SOH\DLE\DC1\n\
+    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\EOT\171\SOH\DLE\DC1\n\
     \N\n\
-    \\EOT\EOT\ETX\STX\SOH\DC2\EOT\168\SOH\STX\EM\SUB@ description of the metric, which can be used in documentation.\n\
+    \\EOT\EOT\ETX\STX\SOH\DC2\EOT\174\SOH\STX\EM\SUB@ description of the metric, which can be used in documentation.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\ENQ\DC2\EOT\168\SOH\STX\b\n\
+    \\ENQ\EOT\ETX\STX\SOH\ENQ\DC2\EOT\174\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\SOH\DC2\EOT\168\SOH\t\DC4\n\
+    \\ENQ\EOT\ETX\STX\SOH\SOH\DC2\EOT\174\SOH\t\DC4\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\ETX\DC2\EOT\168\SOH\ETB\CAN\n\
+    \\ENQ\EOT\ETX\STX\SOH\ETX\DC2\EOT\174\SOH\ETB\CAN\n\
     \\129\SOH\n\
-    \\EOT\EOT\ETX\STX\STX\DC2\EOT\172\SOH\STX\DC2\SUBs unit in which the metric value is reported. Follows the format\n\
+    \\EOT\EOT\ETX\STX\STX\DC2\EOT\178\SOH\STX\DC2\SUBs unit in which the metric value is reported. Follows the format\n\
     \ described by http://unitsofmeasure.org/ucum.html.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\ENQ\DC2\EOT\172\SOH\STX\b\n\
+    \\ENQ\EOT\ETX\STX\STX\ENQ\DC2\EOT\178\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\SOH\DC2\EOT\172\SOH\t\r\n\
+    \\ENQ\EOT\ETX\STX\STX\SOH\DC2\EOT\178\SOH\t\r\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\ETX\DC2\EOT\172\SOH\DLE\DC1\n\
+    \\ENQ\EOT\ETX\STX\STX\ETX\DC2\EOT\178\SOH\DLE\DC1\n\
     \\215\SOH\n\
-    \\EOT\EOT\ETX\b\NUL\DC2\ACK\177\SOH\STX\183\SOH\ETX\SUB\198\SOH Data determines the aggregation type (if any) of the metric, what is the\n\
+    \\EOT\EOT\ETX\b\NUL\DC2\ACK\183\SOH\STX\189\SOH\ETX\SUB\198\SOH Data determines the aggregation type (if any) of the metric, what is the\n\
     \ reported value type for the data points, as well as the relatationship to\n\
     \ the time interval over which they are reported.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\b\NUL\SOH\DC2\EOT\177\SOH\b\f\n\
+    \\ENQ\EOT\ETX\b\NUL\SOH\DC2\EOT\183\SOH\b\f\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\ETX\DC2\EOT\178\SOH\EOT\DC4\n\
+    \\EOT\EOT\ETX\STX\ETX\DC2\EOT\184\SOH\EOT\DC4\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\ACK\DC2\EOT\178\SOH\EOT\t\n\
+    \\ENQ\EOT\ETX\STX\ETX\ACK\DC2\EOT\184\SOH\EOT\t\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\SOH\DC2\EOT\178\SOH\n\
+    \\ENQ\EOT\ETX\STX\ETX\SOH\DC2\EOT\184\SOH\n\
     \\SI\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\ETX\DC2\EOT\178\SOH\DC2\DC3\n\
+    \\ENQ\EOT\ETX\STX\ETX\ETX\DC2\EOT\184\SOH\DC2\DC3\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\EOT\DC2\EOT\179\SOH\EOT\DLE\n\
+    \\EOT\EOT\ETX\STX\EOT\DC2\EOT\185\SOH\EOT\DLE\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\ACK\DC2\EOT\179\SOH\EOT\a\n\
+    \\ENQ\EOT\ETX\STX\EOT\ACK\DC2\EOT\185\SOH\EOT\a\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\SOH\DC2\EOT\179\SOH\b\v\n\
+    \\ENQ\EOT\ETX\STX\EOT\SOH\DC2\EOT\185\SOH\b\v\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\ETX\DC2\EOT\179\SOH\SO\SI\n\
+    \\ENQ\EOT\ETX\STX\EOT\ETX\DC2\EOT\185\SOH\SO\SI\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\ENQ\DC2\EOT\180\SOH\EOT\FS\n\
+    \\EOT\EOT\ETX\STX\ENQ\DC2\EOT\186\SOH\EOT\FS\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\ACK\DC2\EOT\180\SOH\EOT\r\n\
+    \\ENQ\EOT\ETX\STX\ENQ\ACK\DC2\EOT\186\SOH\EOT\r\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\SOH\DC2\EOT\180\SOH\SO\ETB\n\
+    \\ENQ\EOT\ETX\STX\ENQ\SOH\DC2\EOT\186\SOH\SO\ETB\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\ETX\DC2\EOT\180\SOH\SUB\ESC\n\
+    \\ENQ\EOT\ETX\STX\ENQ\ETX\DC2\EOT\186\SOH\SUB\ESC\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\ACK\DC2\EOT\181\SOH\EOT4\n\
+    \\EOT\EOT\ETX\STX\ACK\DC2\EOT\187\SOH\EOT4\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\ACK\DC2\EOT\181\SOH\EOT\CAN\n\
+    \\ENQ\EOT\ETX\STX\ACK\ACK\DC2\EOT\187\SOH\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\SOH\DC2\EOT\181\SOH\EM.\n\
+    \\ENQ\EOT\ETX\STX\ACK\SOH\DC2\EOT\187\SOH\EM.\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\ETX\DC2\EOT\181\SOH13\n\
+    \\ENQ\EOT\ETX\STX\ACK\ETX\DC2\EOT\187\SOH13\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\a\DC2\EOT\182\SOH\EOT\EM\n\
+    \\EOT\EOT\ETX\STX\a\DC2\EOT\188\SOH\EOT\EM\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\ACK\DC2\EOT\182\SOH\EOT\v\n\
+    \\ENQ\EOT\ETX\STX\a\ACK\DC2\EOT\188\SOH\EOT\v\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\SOH\DC2\EOT\182\SOH\f\DC3\n\
+    \\ENQ\EOT\ETX\STX\a\SOH\DC2\EOT\188\SOH\f\DC3\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\ETX\DC2\EOT\182\SOH\SYN\CAN\n\
+    \\ENQ\EOT\ETX\STX\a\ETX\DC2\EOT\188\SOH\SYN\CAN\n\
+    \\152\ETX\n\
+    \\EOT\EOT\ETX\STX\b\DC2\EOT\198\SOH\STX@\SUB\137\ETX Additional metadata attributes that describe the metric. [Optional].\n\
+    \ Attributes are non-identifying.\n\
+    \ Consumers SHOULD NOT need to be aware of these attributes.\n\
+    \ These attributes MAY be used to encode information allowing\n\
+    \ for lossless roundtrip translation to / from another data model.\n\
+    \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
+    \ attribute with the same key).\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\STX\b\EOT\DC2\EOT\198\SOH\STX\n\
+    \\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\STX\b\ACK\DC2\EOT\198\SOH\v1\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\STX\b\SOH\DC2\EOT\198\SOH2:\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\STX\b\ETX\DC2\EOT\198\SOH=?\n\
     \\247\ETX\n\
-    \\STX\EOT\EOT\DC2\ACK\195\SOH\NUL\197\SOH\SOH\SUB\232\ETX Gauge represents the type of a scalar metric that always exports the\n\
+    \\STX\EOT\EOT\DC2\ACK\210\SOH\NUL\212\SOH\SOH\SUB\232\ETX Gauge represents the type of a scalar metric that always exports the\n\
     \ \"current value\" for every data point. It should be used for an \"unknown\"\n\
     \ aggregation.\n\
     \\n\
@@ -5934,110 +6039,110 @@ packedFileDescriptor
     \ \"StartTimeUnixNano\" is ignored for all data points.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\EOT\SOH\DC2\EOT\195\SOH\b\r\n\
+    \\ETX\EOT\EOT\SOH\DC2\EOT\210\SOH\b\r\n\
     \\f\n\
-    \\EOT\EOT\EOT\STX\NUL\DC2\EOT\196\SOH\STX+\n\
+    \\EOT\EOT\EOT\STX\NUL\DC2\EOT\211\SOH\STX+\n\
     \\r\n\
-    \\ENQ\EOT\EOT\STX\NUL\EOT\DC2\EOT\196\SOH\STX\n\
+    \\ENQ\EOT\EOT\STX\NUL\EOT\DC2\EOT\211\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\EOT\STX\NUL\ACK\DC2\EOT\196\SOH\v\SUB\n\
+    \\ENQ\EOT\EOT\STX\NUL\ACK\DC2\EOT\211\SOH\v\SUB\n\
     \\r\n\
-    \\ENQ\EOT\EOT\STX\NUL\SOH\DC2\EOT\196\SOH\ESC&\n\
+    \\ENQ\EOT\EOT\STX\NUL\SOH\DC2\EOT\211\SOH\ESC&\n\
     \\r\n\
-    \\ENQ\EOT\EOT\STX\NUL\ETX\DC2\EOT\196\SOH)*\n\
+    \\ENQ\EOT\EOT\STX\NUL\ETX\DC2\EOT\211\SOH)*\n\
     \\138\SOH\n\
-    \\STX\EOT\ENQ\DC2\ACK\201\SOH\NUL\210\SOH\SOH\SUB| Sum represents the type of a scalar metric that is calculated as a sum of all\n\
+    \\STX\EOT\ENQ\DC2\ACK\216\SOH\NUL\225\SOH\SOH\SUB| Sum represents the type of a scalar metric that is calculated as a sum of all\n\
     \ reported measurements over a time interval.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\ENQ\SOH\DC2\EOT\201\SOH\b\v\n\
+    \\ETX\EOT\ENQ\SOH\DC2\EOT\216\SOH\b\v\n\
     \\f\n\
-    \\EOT\EOT\ENQ\STX\NUL\DC2\EOT\202\SOH\STX+\n\
+    \\EOT\EOT\ENQ\STX\NUL\DC2\EOT\217\SOH\STX+\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\NUL\EOT\DC2\EOT\202\SOH\STX\n\
+    \\ENQ\EOT\ENQ\STX\NUL\EOT\DC2\EOT\217\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\NUL\ACK\DC2\EOT\202\SOH\v\SUB\n\
+    \\ENQ\EOT\ENQ\STX\NUL\ACK\DC2\EOT\217\SOH\v\SUB\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\NUL\SOH\DC2\EOT\202\SOH\ESC&\n\
+    \\ENQ\EOT\ENQ\STX\NUL\SOH\DC2\EOT\217\SOH\ESC&\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\NUL\ETX\DC2\EOT\202\SOH)*\n\
+    \\ENQ\EOT\ENQ\STX\NUL\ETX\DC2\EOT\217\SOH)*\n\
     \\163\SOH\n\
-    \\EOT\EOT\ENQ\STX\SOH\DC2\EOT\206\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
+    \\EOT\EOT\ENQ\STX\SOH\DC2\EOT\221\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
     \ since last report time, or cumulative changes since a fixed start time.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\SOH\ACK\DC2\EOT\206\SOH\STX\CAN\n\
+    \\ENQ\EOT\ENQ\STX\SOH\ACK\DC2\EOT\221\SOH\STX\CAN\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\SOH\SOH\DC2\EOT\206\SOH\EM0\n\
+    \\ENQ\EOT\ENQ\STX\SOH\SOH\DC2\EOT\221\SOH\EM0\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\SOH\ETX\DC2\EOT\206\SOH34\n\
+    \\ENQ\EOT\ENQ\STX\SOH\ETX\DC2\EOT\221\SOH34\n\
     \:\n\
-    \\EOT\EOT\ENQ\STX\STX\DC2\EOT\209\SOH\STX\CAN\SUB, If \"true\" means that the sum is monotonic.\n\
+    \\EOT\EOT\ENQ\STX\STX\DC2\EOT\224\SOH\STX\CAN\SUB, If \"true\" means that the sum is monotonic.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\STX\ENQ\DC2\EOT\209\SOH\STX\ACK\n\
+    \\ENQ\EOT\ENQ\STX\STX\ENQ\DC2\EOT\224\SOH\STX\ACK\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\STX\SOH\DC2\EOT\209\SOH\a\DC3\n\
+    \\ENQ\EOT\ENQ\STX\STX\SOH\DC2\EOT\224\SOH\a\DC3\n\
     \\r\n\
-    \\ENQ\EOT\ENQ\STX\STX\ETX\DC2\EOT\209\SOH\SYN\ETB\n\
+    \\ENQ\EOT\ENQ\STX\STX\ETX\DC2\EOT\224\SOH\SYN\ETB\n\
     \\159\SOH\n\
-    \\STX\EOT\ACK\DC2\ACK\214\SOH\NUL\220\SOH\SOH\SUB\144\SOH Histogram represents the type of a metric that is calculated by aggregating\n\
+    \\STX\EOT\ACK\DC2\ACK\229\SOH\NUL\235\SOH\SOH\SUB\144\SOH Histogram represents the type of a metric that is calculated by aggregating\n\
     \ as a Histogram of all reported measurements over a time interval.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\ACK\SOH\DC2\EOT\214\SOH\b\DC1\n\
+    \\ETX\EOT\ACK\SOH\DC2\EOT\229\SOH\b\DC1\n\
     \\f\n\
-    \\EOT\EOT\ACK\STX\NUL\DC2\EOT\215\SOH\STX.\n\
+    \\EOT\EOT\ACK\STX\NUL\DC2\EOT\230\SOH\STX.\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\NUL\EOT\DC2\EOT\215\SOH\STX\n\
+    \\ENQ\EOT\ACK\STX\NUL\EOT\DC2\EOT\230\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\NUL\ACK\DC2\EOT\215\SOH\v\GS\n\
+    \\ENQ\EOT\ACK\STX\NUL\ACK\DC2\EOT\230\SOH\v\GS\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\NUL\SOH\DC2\EOT\215\SOH\RS)\n\
+    \\ENQ\EOT\ACK\STX\NUL\SOH\DC2\EOT\230\SOH\RS)\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\NUL\ETX\DC2\EOT\215\SOH,-\n\
+    \\ENQ\EOT\ACK\STX\NUL\ETX\DC2\EOT\230\SOH,-\n\
     \\163\SOH\n\
-    \\EOT\EOT\ACK\STX\SOH\DC2\EOT\219\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
+    \\EOT\EOT\ACK\STX\SOH\DC2\EOT\234\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
     \ since last report time, or cumulative changes since a fixed start time.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\SOH\ACK\DC2\EOT\219\SOH\STX\CAN\n\
+    \\ENQ\EOT\ACK\STX\SOH\ACK\DC2\EOT\234\SOH\STX\CAN\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\SOH\SOH\DC2\EOT\219\SOH\EM0\n\
+    \\ENQ\EOT\ACK\STX\SOH\SOH\DC2\EOT\234\SOH\EM0\n\
     \\r\n\
-    \\ENQ\EOT\ACK\STX\SOH\ETX\DC2\EOT\219\SOH34\n\
+    \\ENQ\EOT\ACK\STX\SOH\ETX\DC2\EOT\234\SOH34\n\
     \\188\SOH\n\
-    \\STX\EOT\a\DC2\ACK\224\SOH\NUL\230\SOH\SOH\SUB\173\SOH ExponentialHistogram represents the type of a metric that is calculated by aggregating\n\
+    \\STX\EOT\a\DC2\ACK\239\SOH\NUL\245\SOH\SOH\SUB\173\SOH ExponentialHistogram represents the type of a metric that is calculated by aggregating\n\
     \ as a ExponentialHistogram of all reported double measurements over a time interval.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\a\SOH\DC2\EOT\224\SOH\b\FS\n\
+    \\ETX\EOT\a\SOH\DC2\EOT\239\SOH\b\FS\n\
     \\f\n\
-    \\EOT\EOT\a\STX\NUL\DC2\EOT\225\SOH\STX9\n\
+    \\EOT\EOT\a\STX\NUL\DC2\EOT\240\SOH\STX9\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\NUL\EOT\DC2\EOT\225\SOH\STX\n\
+    \\ENQ\EOT\a\STX\NUL\EOT\DC2\EOT\240\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\NUL\ACK\DC2\EOT\225\SOH\v(\n\
+    \\ENQ\EOT\a\STX\NUL\ACK\DC2\EOT\240\SOH\v(\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\NUL\SOH\DC2\EOT\225\SOH)4\n\
+    \\ENQ\EOT\a\STX\NUL\SOH\DC2\EOT\240\SOH)4\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\NUL\ETX\DC2\EOT\225\SOH78\n\
+    \\ENQ\EOT\a\STX\NUL\ETX\DC2\EOT\240\SOH78\n\
     \\163\SOH\n\
-    \\EOT\EOT\a\STX\SOH\DC2\EOT\229\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
+    \\EOT\EOT\a\STX\SOH\DC2\EOT\244\SOH\STX5\SUB\148\SOH aggregation_temporality describes if the aggregator reports delta changes\n\
     \ since last report time, or cumulative changes since a fixed start time.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\SOH\ACK\DC2\EOT\229\SOH\STX\CAN\n\
+    \\ENQ\EOT\a\STX\SOH\ACK\DC2\EOT\244\SOH\STX\CAN\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\SOH\SOH\DC2\EOT\229\SOH\EM0\n\
+    \\ENQ\EOT\a\STX\SOH\SOH\DC2\EOT\244\SOH\EM0\n\
     \\r\n\
-    \\ENQ\EOT\a\STX\SOH\ETX\DC2\EOT\229\SOH34\n\
+    \\ENQ\EOT\a\STX\SOH\ETX\DC2\EOT\244\SOH34\n\
     \\229\ETX\n\
-    \\STX\EOT\b\DC2\ACK\238\SOH\NUL\240\SOH\SOH\SUB\214\ETX Summary metric data are used to convey quantile summaries,\n\
+    \\STX\EOT\b\DC2\ACK\253\SOH\NUL\255\SOH\SOH\SUB\214\ETX Summary metric data are used to convey quantile summaries,\n\
     \ a Prometheus (see: https://prometheus.io/docs/concepts/metric_types/#summary)\n\
     \ and OpenMetrics (see: https://github.com/OpenObservability/OpenMetrics/blob/4dbf6075567ab43296eed941037c12951faafb92/protos/prometheus.proto#L45)\n\
     \ data type. These data points cannot always be merged in a meaningful way.\n\
@@ -6045,34 +6150,34 @@ packedFileDescriptor
     \ recommended for new applications.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\b\SOH\DC2\EOT\238\SOH\b\SI\n\
+    \\ETX\EOT\b\SOH\DC2\EOT\253\SOH\b\SI\n\
     \\f\n\
-    \\EOT\EOT\b\STX\NUL\DC2\EOT\239\SOH\STX,\n\
+    \\EOT\EOT\b\STX\NUL\DC2\EOT\254\SOH\STX,\n\
     \\r\n\
-    \\ENQ\EOT\b\STX\NUL\EOT\DC2\EOT\239\SOH\STX\n\
+    \\ENQ\EOT\b\STX\NUL\EOT\DC2\EOT\254\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\b\STX\NUL\ACK\DC2\EOT\239\SOH\v\ESC\n\
+    \\ENQ\EOT\b\STX\NUL\ACK\DC2\EOT\254\SOH\v\ESC\n\
     \\r\n\
-    \\ENQ\EOT\b\STX\NUL\SOH\DC2\EOT\239\SOH\FS'\n\
+    \\ENQ\EOT\b\STX\NUL\SOH\DC2\EOT\254\SOH\FS'\n\
     \\r\n\
-    \\ENQ\EOT\b\STX\NUL\ETX\DC2\EOT\239\SOH*+\n\
+    \\ENQ\EOT\b\STX\NUL\ETX\DC2\EOT\254\SOH*+\n\
     \\190\SOH\n\
-    \\STX\ENQ\NUL\DC2\ACK\245\SOH\NUL\183\STX\SOH\SUB\175\SOH AggregationTemporality defines how a metric aggregator reports aggregated\n\
+    \\STX\ENQ\NUL\DC2\ACK\132\STX\NUL\198\STX\SOH\SUB\175\SOH AggregationTemporality defines how a metric aggregator reports aggregated\n\
     \ values. It describes how those values relate to the time interval over\n\
     \ which they are aggregated.\n\
     \\n\
     \\v\n\
-    \\ETX\ENQ\NUL\SOH\DC2\EOT\245\SOH\ENQ\ESC\n\
+    \\ETX\ENQ\NUL\SOH\DC2\EOT\132\STX\ENQ\ESC\n\
     \W\n\
-    \\EOT\ENQ\NUL\STX\NUL\DC2\EOT\247\SOH\STX*\SUBI UNSPECIFIED is the default AggregationTemporality, it MUST not be used.\n\
+    \\EOT\ENQ\NUL\STX\NUL\DC2\EOT\134\STX\STX*\SUBI UNSPECIFIED is the default AggregationTemporality, it MUST not be used.\n\
     \\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\NUL\SOH\DC2\EOT\247\SOH\STX%\n\
+    \\ENQ\ENQ\NUL\STX\NUL\SOH\DC2\EOT\134\STX\STX%\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\NUL\STX\DC2\EOT\247\SOH()\n\
+    \\ENQ\ENQ\NUL\STX\NUL\STX\DC2\EOT\134\STX()\n\
     \\236\t\n\
-    \\EOT\ENQ\NUL\STX\SOH\DC2\EOT\145\STX\STX$\SUB\221\t DELTA is an AggregationTemporality for a metric aggregator which reports\n\
+    \\EOT\ENQ\NUL\STX\SOH\DC2\EOT\160\STX\STX$\SUB\221\t DELTA is an AggregationTemporality for a metric aggregator which reports\n\
     \ changes since last report time. Successive metrics contain aggregation of\n\
     \ values from continuous and non-overlapping intervals.\n\
     \\n\
@@ -6098,11 +6203,11 @@ packedFileDescriptor
     \      t_0+2 with a value of 2.\n\
     \\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\SOH\SOH\DC2\EOT\145\STX\STX\US\n\
+    \\ENQ\ENQ\NUL\STX\SOH\SOH\DC2\EOT\160\STX\STX\US\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\SOH\STX\DC2\EOT\145\STX\"#\n\
+    \\ENQ\ENQ\NUL\STX\SOH\STX\DC2\EOT\160\STX\"#\n\
     \\147\SI\n\
-    \\EOT\ENQ\NUL\STX\STX\DC2\EOT\182\STX\STX)\SUB\132\SI CUMULATIVE is an AggregationTemporality for a metric aggregator which\n\
+    \\EOT\ENQ\NUL\STX\STX\DC2\EOT\197\STX\STX)\SUB\132\SI CUMULATIVE is an AggregationTemporality for a metric aggregator which\n\
     \ reports changes since a fixed start time. This means that current values\n\
     \ of a CUMULATIVE metric depend on all previous measurements since the\n\
     \ start time. Because of this, the sender is required to retain this state\n\
@@ -6139,11 +6244,11 @@ packedFileDescriptor
     \ value was reset (e.g. Prometheus).\n\
     \\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\STX\SOH\DC2\EOT\182\STX\STX$\n\
+    \\ENQ\ENQ\NUL\STX\STX\SOH\DC2\EOT\197\STX\STX$\n\
     \\r\n\
-    \\ENQ\ENQ\NUL\STX\STX\STX\DC2\EOT\182\STX'(\n\
+    \\ENQ\ENQ\NUL\STX\STX\STX\DC2\EOT\197\STX'(\n\
     \\147\ETX\n\
-    \\STX\ENQ\SOH\DC2\ACK\192\STX\NUL\203\STX\SOH\SUB\132\ETX DataPointFlags is defined as a protobuf 'uint32' type and is to be used as a\n\
+    \\STX\ENQ\SOH\DC2\ACK\207\STX\NUL\218\STX\SOH\SUB\132\ETX DataPointFlags is defined as a protobuf 'uint32' type and is to be used as a\n\
     \ bit-field representing 32 distinct boolean flags.  Each flag defined in this\n\
     \ enum is a bit-mask.  To test the presence of a single flag in the flags of\n\
     \ a data point, for example, use an expression like:\n\
@@ -6152,129 +6257,129 @@ packedFileDescriptor
     \\n\
     \\n\
     \\v\n\
-    \\ETX\ENQ\SOH\SOH\DC2\EOT\192\STX\ENQ\DC3\n\
+    \\ETX\ENQ\SOH\SOH\DC2\EOT\207\STX\ENQ\DC3\n\
     \\150\SOH\n\
-    \\EOT\ENQ\SOH\STX\NUL\DC2\EOT\195\STX\STX\"\SUB\135\SOH The zero value for the enum. Should not be used for comparisons.\n\
+    \\EOT\ENQ\SOH\STX\NUL\DC2\EOT\210\STX\STX\"\SUB\135\SOH The zero value for the enum. Should not be used for comparisons.\n\
     \ Instead use bitwise \"and\" with the appropriate mask as shown above.\n\
     \\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\EOT\195\STX\STX\GS\n\
+    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\EOT\210\STX\STX\GS\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\EOT\195\STX !\n\
+    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\EOT\210\STX !\n\
     \\203\SOH\n\
-    \\EOT\ENQ\SOH\STX\SOH\DC2\EOT\200\STX\STX.\SUB\188\SOH This DataPoint is valid but has no recorded value.  This value\n\
+    \\EOT\ENQ\SOH\STX\SOH\DC2\EOT\215\STX\STX.\SUB\188\SOH This DataPoint is valid but has no recorded value.  This value\n\
     \ SHOULD be used to reflect explicitly missing data in a series, as\n\
     \ for an equivalent to the Prometheus \"staleness marker\".\n\
     \\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\EOT\200\STX\STX)\n\
+    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\EOT\215\STX\STX)\n\
     \\r\n\
-    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\EOT\200\STX,-\n\
+    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\EOT\215\STX,-\n\
     \\129\SOH\n\
-    \\STX\EOT\t\DC2\ACK\207\STX\NUL\243\STX\SOH\SUBs NumberDataPoint is a single data point in a timeseries that describes the\n\
+    \\STX\EOT\t\DC2\ACK\222\STX\NUL\130\ETX\SOH\SUBs NumberDataPoint is a single data point in a timeseries that describes the\n\
     \ time-varying scalar value of a metric.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\t\SOH\DC2\EOT\207\STX\b\ETB\n\
+    \\ETX\EOT\t\SOH\DC2\EOT\222\STX\b\ETB\n\
     \\v\n\
-    \\ETX\EOT\t\t\DC2\EOT\208\STX\STX\r\n\
+    \\ETX\EOT\t\t\DC2\EOT\223\STX\STX\r\n\
     \\f\n\
-    \\EOT\EOT\t\t\NUL\DC2\EOT\208\STX\v\f\n\
+    \\EOT\EOT\t\t\NUL\DC2\EOT\223\STX\v\f\n\
     \\r\n\
-    \\ENQ\EOT\t\t\NUL\SOH\DC2\EOT\208\STX\v\f\n\
+    \\ENQ\EOT\t\t\NUL\SOH\DC2\EOT\223\STX\v\f\n\
     \\r\n\
-    \\ENQ\EOT\t\t\NUL\STX\DC2\EOT\208\STX\v\f\n\
+    \\ENQ\EOT\t\t\NUL\STX\DC2\EOT\223\STX\v\f\n\
     \\136\STX\n\
-    \\EOT\EOT\t\STX\NUL\DC2\EOT\214\STX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
+    \\EOT\EOT\t\STX\NUL\DC2\EOT\229\STX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
     \ where this point belongs. The list may be empty (may contain 0 elements).\n\
     \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
     \ attribute with the same key).\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\NUL\EOT\DC2\EOT\214\STX\STX\n\
+    \\ENQ\EOT\t\STX\NUL\EOT\DC2\EOT\229\STX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\NUL\ACK\DC2\EOT\214\STX\v1\n\
+    \\ENQ\EOT\t\STX\NUL\ACK\DC2\EOT\229\STX\v1\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\NUL\SOH\DC2\EOT\214\STX2<\n\
+    \\ENQ\EOT\t\STX\NUL\SOH\DC2\EOT\229\STX2<\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\NUL\ETX\DC2\EOT\214\STX?@\n\
+    \\ENQ\EOT\t\STX\NUL\ETX\DC2\EOT\229\STX?@\n\
     \\197\SOH\n\
-    \\EOT\EOT\t\STX\SOH\DC2\EOT\221\STX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
+    \\EOT\EOT\t\STX\SOH\DC2\EOT\236\STX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
     \ the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\SOH\ENQ\DC2\EOT\221\STX\STX\t\n\
+    \\ENQ\EOT\t\STX\SOH\ENQ\DC2\EOT\236\STX\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\SOH\SOH\DC2\EOT\221\STX\n\
+    \\ENQ\EOT\t\STX\SOH\SOH\DC2\EOT\236\STX\n\
     \\RS\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\SOH\ETX\DC2\EOT\221\STX!\"\n\
+    \\ENQ\EOT\t\STX\SOH\ETX\DC2\EOT\236\STX!\"\n\
     \\163\SOH\n\
-    \\EOT\EOT\t\STX\STX\DC2\EOT\227\STX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
+    \\EOT\EOT\t\STX\STX\DC2\EOT\242\STX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\STX\ENQ\DC2\EOT\227\STX\STX\t\n\
+    \\ENQ\EOT\t\STX\STX\ENQ\DC2\EOT\242\STX\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\STX\SOH\DC2\EOT\227\STX\n\
+    \\ENQ\EOT\t\STX\STX\SOH\DC2\EOT\242\STX\n\
     \\CAN\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\STX\ETX\DC2\EOT\227\STX\ESC\FS\n\
+    \\ENQ\EOT\t\STX\STX\ETX\DC2\EOT\242\STX\ESC\FS\n\
     \\141\SOH\n\
-    \\EOT\EOT\t\b\NUL\DC2\ACK\231\STX\STX\234\STX\ETX\SUB} The value itself.  A point is considered invalid when one of the recognized\n\
+    \\EOT\EOT\t\b\NUL\DC2\ACK\246\STX\STX\249\STX\ETX\SUB} The value itself.  A point is considered invalid when one of the recognized\n\
     \ value fields is not present inside this oneof.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\b\NUL\SOH\DC2\EOT\231\STX\b\r\n\
+    \\ENQ\EOT\t\b\NUL\SOH\DC2\EOT\246\STX\b\r\n\
     \\f\n\
-    \\EOT\EOT\t\STX\ETX\DC2\EOT\232\STX\EOT\EM\n\
+    \\EOT\EOT\t\STX\ETX\DC2\EOT\247\STX\EOT\EM\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ETX\ENQ\DC2\EOT\232\STX\EOT\n\
+    \\ENQ\EOT\t\STX\ETX\ENQ\DC2\EOT\247\STX\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ETX\SOH\DC2\EOT\232\STX\v\DC4\n\
+    \\ENQ\EOT\t\STX\ETX\SOH\DC2\EOT\247\STX\v\DC4\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ETX\ETX\DC2\EOT\232\STX\ETB\CAN\n\
+    \\ENQ\EOT\t\STX\ETX\ETX\DC2\EOT\247\STX\ETB\CAN\n\
     \\f\n\
-    \\EOT\EOT\t\STX\EOT\DC2\EOT\233\STX\EOT\CAN\n\
+    \\EOT\EOT\t\STX\EOT\DC2\EOT\248\STX\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\EOT\ENQ\DC2\EOT\233\STX\EOT\f\n\
+    \\ENQ\EOT\t\STX\EOT\ENQ\DC2\EOT\248\STX\EOT\f\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\EOT\SOH\DC2\EOT\233\STX\r\DC3\n\
+    \\ENQ\EOT\t\STX\EOT\SOH\DC2\EOT\248\STX\r\DC3\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\EOT\ETX\DC2\EOT\233\STX\SYN\ETB\n\
+    \\ENQ\EOT\t\STX\EOT\ETX\DC2\EOT\248\STX\SYN\ETB\n\
     \o\n\
-    \\EOT\EOT\t\STX\ENQ\DC2\EOT\238\STX\STX\"\SUBa (Optional) List of exemplars collected from\n\
+    \\EOT\EOT\t\STX\ENQ\DC2\EOT\253\STX\STX\"\SUBa (Optional) List of exemplars collected from\n\
     \ measurements that were used to form the data point\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ENQ\EOT\DC2\EOT\238\STX\STX\n\
+    \\ENQ\EOT\t\STX\ENQ\EOT\DC2\EOT\253\STX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ENQ\ACK\DC2\EOT\238\STX\v\DC3\n\
+    \\ENQ\EOT\t\STX\ENQ\ACK\DC2\EOT\253\STX\v\DC3\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ENQ\SOH\DC2\EOT\238\STX\DC4\GS\n\
+    \\ENQ\EOT\t\STX\ENQ\SOH\DC2\EOT\253\STX\DC4\GS\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ENQ\ETX\DC2\EOT\238\STX !\n\
+    \\ENQ\EOT\t\STX\ENQ\ETX\DC2\EOT\253\STX !\n\
     \}\n\
-    \\EOT\EOT\t\STX\ACK\DC2\EOT\242\STX\STX\DC3\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
+    \\EOT\EOT\t\STX\ACK\DC2\EOT\129\ETX\STX\DC3\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
     \ for the available flags and their meaning.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ACK\ENQ\DC2\EOT\242\STX\STX\b\n\
+    \\ENQ\EOT\t\STX\ACK\ENQ\DC2\EOT\129\ETX\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ACK\SOH\DC2\EOT\242\STX\t\SO\n\
+    \\ENQ\EOT\t\STX\ACK\SOH\DC2\EOT\129\ETX\t\SO\n\
     \\r\n\
-    \\ENQ\EOT\t\STX\ACK\ETX\DC2\EOT\242\STX\DC1\DC2\n\
+    \\ENQ\EOT\t\STX\ACK\ETX\DC2\EOT\129\ETX\DC1\DC2\n\
     \\196\EOT\n\
     \\STX\EOT\n\
-    \\DC2\ACK\255\STX\NUL\201\ETX\SOH\SUB\181\EOT HistogramDataPoint is a single data point in a timeseries that describes the\n\
+    \\DC2\ACK\142\ETX\NUL\216\ETX\SOH\SUB\181\EOT HistogramDataPoint is a single data point in a timeseries that describes the\n\
     \ time-varying values of a Histogram. A Histogram contains summary statistics\n\
     \ for a population of values, it may optionally contain the distribution of\n\
     \ those values across a set of buckets.\n\
@@ -6287,42 +6392,42 @@ packedFileDescriptor
     \\n\
     \\v\n\
     \\ETX\EOT\n\
-    \\SOH\DC2\EOT\255\STX\b\SUB\n\
+    \\SOH\DC2\EOT\142\ETX\b\SUB\n\
     \\v\n\
     \\ETX\EOT\n\
-    \\t\DC2\EOT\128\ETX\STX\r\n\
+    \\t\DC2\EOT\143\ETX\STX\r\n\
     \\f\n\
     \\EOT\EOT\n\
-    \\t\NUL\DC2\EOT\128\ETX\v\f\n\
+    \\t\NUL\DC2\EOT\143\ETX\v\f\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\t\NUL\SOH\DC2\EOT\128\ETX\v\f\n\
+    \\t\NUL\SOH\DC2\EOT\143\ETX\v\f\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\t\NUL\STX\DC2\EOT\128\ETX\v\f\n\
+    \\t\NUL\STX\DC2\EOT\143\ETX\v\f\n\
     \\136\STX\n\
     \\EOT\EOT\n\
-    \\STX\NUL\DC2\EOT\134\ETX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
+    \\STX\NUL\DC2\EOT\149\ETX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
     \ where this point belongs. The list may be empty (may contain 0 elements).\n\
     \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
     \ attribute with the same key).\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\NUL\EOT\DC2\EOT\134\ETX\STX\n\
+    \\STX\NUL\EOT\DC2\EOT\149\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\NUL\ACK\DC2\EOT\134\ETX\v1\n\
+    \\STX\NUL\ACK\DC2\EOT\149\ETX\v1\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\NUL\SOH\DC2\EOT\134\ETX2<\n\
+    \\STX\NUL\SOH\DC2\EOT\149\ETX2<\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\NUL\ETX\DC2\EOT\134\ETX?@\n\
+    \\STX\NUL\ETX\DC2\EOT\149\ETX?@\n\
     \\197\SOH\n\
     \\EOT\EOT\n\
-    \\STX\SOH\DC2\EOT\141\ETX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
+    \\STX\SOH\DC2\EOT\156\ETX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
     \ the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
@@ -6330,50 +6435,50 @@ packedFileDescriptor
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\ENQ\DC2\EOT\141\ETX\STX\t\n\
+    \\STX\SOH\ENQ\DC2\EOT\156\ETX\STX\t\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\SOH\DC2\EOT\141\ETX\n\
+    \\STX\SOH\SOH\DC2\EOT\156\ETX\n\
     \\RS\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\SOH\ETX\DC2\EOT\141\ETX!\"\n\
+    \\STX\SOH\ETX\DC2\EOT\156\ETX!\"\n\
     \\163\SOH\n\
     \\EOT\EOT\n\
-    \\STX\STX\DC2\EOT\147\ETX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
+    \\STX\STX\DC2\EOT\162\ETX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\STX\ENQ\DC2\EOT\147\ETX\STX\t\n\
+    \\STX\STX\ENQ\DC2\EOT\162\ETX\STX\t\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\STX\SOH\DC2\EOT\147\ETX\n\
+    \\STX\STX\SOH\DC2\EOT\162\ETX\n\
     \\CAN\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\STX\ETX\DC2\EOT\147\ETX\ESC\FS\n\
+    \\STX\STX\ETX\DC2\EOT\162\ETX\ESC\FS\n\
     \\186\SOH\n\
     \\EOT\EOT\n\
-    \\STX\ETX\DC2\EOT\152\ETX\STX\DC4\SUB\171\SOH count is the number of values in the population. Must be non-negative. This\n\
+    \\STX\ETX\DC2\EOT\167\ETX\STX\DC4\SUB\171\SOH count is the number of values in the population. Must be non-negative. This\n\
     \ value must be equal to the sum of the \"count\" fields in buckets if a\n\
     \ histogram is provided.\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\ENQ\DC2\EOT\152\ETX\STX\t\n\
+    \\STX\ETX\ENQ\DC2\EOT\167\ETX\STX\t\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\SOH\DC2\EOT\152\ETX\n\
+    \\STX\ETX\SOH\DC2\EOT\167\ETX\n\
     \\SI\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ETX\ETX\DC2\EOT\152\ETX\DC2\DC3\n\
+    \\STX\ETX\ETX\DC2\EOT\167\ETX\DC2\DC3\n\
     \\245\ETX\n\
     \\EOT\EOT\n\
-    \\STX\EOT\DC2\EOT\162\ETX\STX\SUB\SUB\230\ETX sum of the values in the population. If count is zero then this field\n\
+    \\STX\EOT\DC2\EOT\177\ETX\STX\SUB\SUB\230\ETX sum of the values in the population. If count is zero then this field\n\
     \ must be zero.\n\
     \\n\
     \ Note: Sum should only be filled out when measuring non-negative discrete\n\
@@ -6384,20 +6489,20 @@ packedFileDescriptor
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\EOT\DC2\EOT\162\ETX\STX\n\
+    \\STX\EOT\EOT\DC2\EOT\177\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\ENQ\DC2\EOT\162\ETX\v\DC1\n\
+    \\STX\EOT\ENQ\DC2\EOT\177\ETX\v\DC1\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\SOH\DC2\EOT\162\ETX\DC2\NAK\n\
+    \\STX\EOT\SOH\DC2\EOT\177\ETX\DC2\NAK\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\EOT\ETX\DC2\EOT\162\ETX\CAN\EM\n\
+    \\STX\EOT\ETX\DC2\EOT\177\ETX\CAN\EM\n\
     \\178\STX\n\
     \\EOT\EOT\n\
-    \\STX\ENQ\DC2\EOT\171\ETX\STX%\SUB\163\STX bucket_counts is an optional field contains the count values of histogram\n\
+    \\STX\ENQ\DC2\EOT\186\ETX\STX%\SUB\163\STX bucket_counts is an optional field contains the count values of histogram\n\
     \ for each bucket.\n\
     \\n\
     \ The sum of the bucket_counts must equal the value in the count field.\n\
@@ -6407,20 +6512,20 @@ packedFileDescriptor
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\EOT\DC2\EOT\171\ETX\STX\n\
+    \\STX\ENQ\EOT\DC2\EOT\186\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\ENQ\DC2\EOT\171\ETX\v\DC2\n\
+    \\STX\ENQ\ENQ\DC2\EOT\186\ETX\v\DC2\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\SOH\DC2\EOT\171\ETX\DC3 \n\
+    \\STX\ENQ\SOH\DC2\EOT\186\ETX\DC3 \n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ENQ\ETX\DC2\EOT\171\ETX#$\n\
+    \\STX\ENQ\ETX\DC2\EOT\186\ETX#$\n\
     \\215\EOT\n\
     \\EOT\EOT\n\
-    \\STX\ACK\DC2\EOT\186\ETX\STX&\SUB\200\EOT explicit_bounds specifies buckets with explicitly defined bounds for values.\n\
+    \\STX\ACK\DC2\EOT\201\ETX\STX&\SUB\200\EOT explicit_bounds specifies buckets with explicitly defined bounds for values.\n\
     \\n\
     \ The boundaries for bucket at index i are:\n\
     \\n\
@@ -6436,153 +6541,153 @@ packedFileDescriptor
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\EOT\DC2\EOT\186\ETX\STX\n\
+    \\STX\ACK\EOT\DC2\EOT\201\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\ENQ\DC2\EOT\186\ETX\v\DC1\n\
+    \\STX\ACK\ENQ\DC2\EOT\201\ETX\v\DC1\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\SOH\DC2\EOT\186\ETX\DC2!\n\
+    \\STX\ACK\SOH\DC2\EOT\201\ETX\DC2!\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\ACK\ETX\DC2\EOT\186\ETX$%\n\
+    \\STX\ACK\ETX\DC2\EOT\201\ETX$%\n\
     \o\n\
     \\EOT\EOT\n\
-    \\STX\a\DC2\EOT\190\ETX\STX\"\SUBa (Optional) List of exemplars collected from\n\
+    \\STX\a\DC2\EOT\205\ETX\STX\"\SUBa (Optional) List of exemplars collected from\n\
     \ measurements that were used to form the data point\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\a\EOT\DC2\EOT\190\ETX\STX\n\
+    \\STX\a\EOT\DC2\EOT\205\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\a\ACK\DC2\EOT\190\ETX\v\DC3\n\
+    \\STX\a\ACK\DC2\EOT\205\ETX\v\DC3\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\a\SOH\DC2\EOT\190\ETX\DC4\GS\n\
+    \\STX\a\SOH\DC2\EOT\205\ETX\DC4\GS\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\a\ETX\DC2\EOT\190\ETX !\n\
+    \\STX\a\ETX\DC2\EOT\205\ETX !\n\
     \}\n\
     \\EOT\EOT\n\
-    \\STX\b\DC2\EOT\194\ETX\STX\DC4\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
+    \\STX\b\DC2\EOT\209\ETX\STX\DC4\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
     \ for the available flags and their meaning.\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\b\ENQ\DC2\EOT\194\ETX\STX\b\n\
+    \\STX\b\ENQ\DC2\EOT\209\ETX\STX\b\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\b\SOH\DC2\EOT\194\ETX\t\SO\n\
+    \\STX\b\SOH\DC2\EOT\209\ETX\t\SO\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\b\ETX\DC2\EOT\194\ETX\DC1\DC3\n\
+    \\STX\b\ETX\DC2\EOT\209\ETX\DC1\DC3\n\
     \E\n\
     \\EOT\EOT\n\
-    \\STX\t\DC2\EOT\197\ETX\STX\ESC\SUB7 min is the minimum value over (start_time, end_time].\n\
+    \\STX\t\DC2\EOT\212\ETX\STX\ESC\SUB7 min is the minimum value over (start_time, end_time].\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\t\EOT\DC2\EOT\197\ETX\STX\n\
+    \\STX\t\EOT\DC2\EOT\212\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\t\ENQ\DC2\EOT\197\ETX\v\DC1\n\
+    \\STX\t\ENQ\DC2\EOT\212\ETX\v\DC1\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\t\SOH\DC2\EOT\197\ETX\DC2\NAK\n\
+    \\STX\t\SOH\DC2\EOT\212\ETX\DC2\NAK\n\
     \\r\n\
     \\ENQ\EOT\n\
-    \\STX\t\ETX\DC2\EOT\197\ETX\CAN\SUB\n\
+    \\STX\t\ETX\DC2\EOT\212\ETX\CAN\SUB\n\
     \E\n\
     \\EOT\EOT\n\
     \\STX\n\
-    \\DC2\EOT\200\ETX\STX\ESC\SUB7 max is the maximum value over (start_time, end_time].\n\
+    \\DC2\EOT\215\ETX\STX\ESC\SUB7 max is the maximum value over (start_time, end_time].\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
     \\STX\n\
-    \\EOT\DC2\EOT\200\ETX\STX\n\
+    \\EOT\DC2\EOT\215\ETX\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\n\
     \\STX\n\
-    \\ENQ\DC2\EOT\200\ETX\v\DC1\n\
+    \\ENQ\DC2\EOT\215\ETX\v\DC1\n\
     \\r\n\
     \\ENQ\EOT\n\
     \\STX\n\
-    \\SOH\DC2\EOT\200\ETX\DC2\NAK\n\
+    \\SOH\DC2\EOT\215\ETX\DC2\NAK\n\
     \\r\n\
     \\ENQ\EOT\n\
     \\STX\n\
-    \\ETX\DC2\EOT\200\ETX\CAN\SUB\n\
+    \\ETX\DC2\EOT\215\ETX\CAN\SUB\n\
     \\207\STX\n\
-    \\STX\EOT\v\DC2\ACK\208\ETX\NUL\189\EOT\SOH\SUB\192\STX ExponentialHistogramDataPoint is a single data point in a timeseries that describes the\n\
+    \\STX\EOT\v\DC2\ACK\223\ETX\NUL\204\EOT\SOH\SUB\192\STX ExponentialHistogramDataPoint is a single data point in a timeseries that describes the\n\
     \ time-varying values of a ExponentialHistogram of double values. A ExponentialHistogram contains\n\
     \ summary statistics for a population of values, it may optionally contain the\n\
     \ distribution of those values across a set of buckets.\n\
     \\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\v\SOH\DC2\EOT\208\ETX\b%\n\
+    \\ETX\EOT\v\SOH\DC2\EOT\223\ETX\b%\n\
     \\136\STX\n\
-    \\EOT\EOT\v\STX\NUL\DC2\EOT\213\ETX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
+    \\EOT\EOT\v\STX\NUL\DC2\EOT\228\ETX\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
     \ where this point belongs. The list may be empty (may contain 0 elements).\n\
     \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
     \ attribute with the same key).\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\NUL\EOT\DC2\EOT\213\ETX\STX\n\
+    \\ENQ\EOT\v\STX\NUL\EOT\DC2\EOT\228\ETX\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\NUL\ACK\DC2\EOT\213\ETX\v1\n\
+    \\ENQ\EOT\v\STX\NUL\ACK\DC2\EOT\228\ETX\v1\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\NUL\SOH\DC2\EOT\213\ETX2<\n\
+    \\ENQ\EOT\v\STX\NUL\SOH\DC2\EOT\228\ETX2<\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\NUL\ETX\DC2\EOT\213\ETX?@\n\
+    \\ENQ\EOT\v\STX\NUL\ETX\DC2\EOT\228\ETX?@\n\
     \\197\SOH\n\
-    \\EOT\EOT\v\STX\SOH\DC2\EOT\220\ETX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
+    \\EOT\EOT\v\STX\SOH\DC2\EOT\235\ETX\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
     \ the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\SOH\ENQ\DC2\EOT\220\ETX\STX\t\n\
+    \\ENQ\EOT\v\STX\SOH\ENQ\DC2\EOT\235\ETX\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\SOH\SOH\DC2\EOT\220\ETX\n\
+    \\ENQ\EOT\v\STX\SOH\SOH\DC2\EOT\235\ETX\n\
     \\RS\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\SOH\ETX\DC2\EOT\220\ETX!\"\n\
+    \\ENQ\EOT\v\STX\SOH\ETX\DC2\EOT\235\ETX!\"\n\
     \\163\SOH\n\
-    \\EOT\EOT\v\STX\STX\DC2\EOT\226\ETX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
+    \\EOT\EOT\v\STX\STX\DC2\EOT\241\ETX\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\STX\ENQ\DC2\EOT\226\ETX\STX\t\n\
+    \\ENQ\EOT\v\STX\STX\ENQ\DC2\EOT\241\ETX\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\STX\SOH\DC2\EOT\226\ETX\n\
+    \\ENQ\EOT\v\STX\STX\SOH\DC2\EOT\241\ETX\n\
     \\CAN\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\STX\ETX\DC2\EOT\226\ETX\ESC\FS\n\
+    \\ENQ\EOT\v\STX\STX\ETX\DC2\EOT\241\ETX\ESC\FS\n\
     \\221\SOH\n\
-    \\EOT\EOT\v\STX\ETX\DC2\EOT\231\ETX\STX\DC4\SUB\206\SOH count is the number of values in the population. Must be\n\
+    \\EOT\EOT\v\STX\ETX\DC2\EOT\246\ETX\STX\DC4\SUB\206\SOH count is the number of values in the population. Must be\n\
     \ non-negative. This value must be equal to the sum of the \"bucket_counts\"\n\
     \ values in the positive and negative Buckets plus the \"zero_count\" field.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ETX\ENQ\DC2\EOT\231\ETX\STX\t\n\
+    \\ENQ\EOT\v\STX\ETX\ENQ\DC2\EOT\246\ETX\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ETX\SOH\DC2\EOT\231\ETX\n\
+    \\ENQ\EOT\v\STX\ETX\SOH\DC2\EOT\246\ETX\n\
     \\SI\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ETX\ETX\DC2\EOT\231\ETX\DC2\DC3\n\
+    \\ENQ\EOT\v\STX\ETX\ETX\DC2\EOT\246\ETX\DC2\DC3\n\
     \\245\ETX\n\
-    \\EOT\EOT\v\STX\EOT\DC2\EOT\241\ETX\STX\SUB\SUB\230\ETX sum of the values in the population. If count is zero then this field\n\
+    \\EOT\EOT\v\STX\EOT\DC2\EOT\128\EOT\STX\SUB\SUB\230\ETX sum of the values in the population. If count is zero then this field\n\
     \ must be zero.\n\
     \\n\
     \ Note: Sum should only be filled out when measuring non-negative discrete\n\
@@ -6592,16 +6697,16 @@ packedFileDescriptor
     \ see: https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#histogram\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\EOT\EOT\DC2\EOT\241\ETX\STX\n\
+    \\ENQ\EOT\v\STX\EOT\EOT\DC2\EOT\128\EOT\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\EOT\ENQ\DC2\EOT\241\ETX\v\DC1\n\
+    \\ENQ\EOT\v\STX\EOT\ENQ\DC2\EOT\128\EOT\v\DC1\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\EOT\SOH\DC2\EOT\241\ETX\DC2\NAK\n\
+    \\ENQ\EOT\v\STX\EOT\SOH\DC2\EOT\128\EOT\DC2\NAK\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\EOT\ETX\DC2\EOT\241\ETX\CAN\EM\n\
+    \\ENQ\EOT\v\STX\EOT\ETX\DC2\EOT\128\EOT\CAN\EM\n\
     \\226\EOT\n\
-    \\EOT\EOT\v\STX\ENQ\DC2\EOT\130\EOT\STX\DC3\SUB\211\EOT scale describes the resolution of the histogram.  Boundaries are\n\
+    \\EOT\EOT\v\STX\ENQ\DC2\EOT\145\EOT\STX\DC3\SUB\211\EOT scale describes the resolution of the histogram.  Boundaries are\n\
     \ located at powers of the base, where:\n\
     \\n\
     \   base = (2^(2^-scale))\n\
@@ -6618,13 +6723,13 @@ packedFileDescriptor
     \ values depend on the range of the data.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ENQ\ENQ\DC2\EOT\130\EOT\STX\b\n\
+    \\ENQ\EOT\v\STX\ENQ\ENQ\DC2\EOT\145\EOT\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ENQ\SOH\DC2\EOT\130\EOT\t\SO\n\
+    \\ENQ\EOT\v\STX\ENQ\SOH\DC2\EOT\145\EOT\t\SO\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ENQ\ETX\DC2\EOT\130\EOT\DC1\DC2\n\
+    \\ENQ\EOT\v\STX\ENQ\ETX\DC2\EOT\145\EOT\DC1\DC2\n\
     \\170\ETX\n\
-    \\EOT\EOT\v\STX\ACK\DC2\EOT\140\EOT\STX\EM\SUB\155\ETX zero_count is the count of values that are either exactly zero or\n\
+    \\EOT\EOT\v\STX\ACK\DC2\EOT\155\EOT\STX\EM\SUB\155\ETX zero_count is the count of values that are either exactly zero or\n\
     \ within the region considered zero by the instrumentation at the\n\
     \ tolerated degree of precision.  This bucket stores values that\n\
     \ cannot be expressed using the standard exponential formula as\n\
@@ -6634,53 +6739,53 @@ packedFileDescriptor
     \ mass equal to (zero_count / count).\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ACK\ENQ\DC2\EOT\140\EOT\STX\t\n\
+    \\ENQ\EOT\v\STX\ACK\ENQ\DC2\EOT\155\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ACK\SOH\DC2\EOT\140\EOT\n\
+    \\ENQ\EOT\v\STX\ACK\SOH\DC2\EOT\155\EOT\n\
     \\DC4\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\ACK\ETX\DC2\EOT\140\EOT\ETB\CAN\n\
+    \\ENQ\EOT\v\STX\ACK\ETX\DC2\EOT\155\EOT\ETB\CAN\n\
     \Q\n\
-    \\EOT\EOT\v\STX\a\DC2\EOT\143\EOT\STX\ETB\SUBC positive carries the positive range of exponential bucket counts.\n\
+    \\EOT\EOT\v\STX\a\DC2\EOT\158\EOT\STX\ETB\SUBC positive carries the positive range of exponential bucket counts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\a\ACK\DC2\EOT\143\EOT\STX\t\n\
+    \\ENQ\EOT\v\STX\a\ACK\DC2\EOT\158\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\a\SOH\DC2\EOT\143\EOT\n\
+    \\ENQ\EOT\v\STX\a\SOH\DC2\EOT\158\EOT\n\
     \\DC2\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\a\ETX\DC2\EOT\143\EOT\NAK\SYN\n\
+    \\ENQ\EOT\v\STX\a\ETX\DC2\EOT\158\EOT\NAK\SYN\n\
     \Q\n\
-    \\EOT\EOT\v\STX\b\DC2\EOT\146\EOT\STX\ETB\SUBC negative carries the negative range of exponential bucket counts.\n\
+    \\EOT\EOT\v\STX\b\DC2\EOT\161\EOT\STX\ETB\SUBC negative carries the negative range of exponential bucket counts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\b\ACK\DC2\EOT\146\EOT\STX\t\n\
+    \\ENQ\EOT\v\STX\b\ACK\DC2\EOT\161\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\b\SOH\DC2\EOT\146\EOT\n\
+    \\ENQ\EOT\v\STX\b\SOH\DC2\EOT\161\EOT\n\
     \\DC2\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\b\ETX\DC2\EOT\146\EOT\NAK\SYN\n\
+    \\ENQ\EOT\v\STX\b\ETX\DC2\EOT\161\EOT\NAK\SYN\n\
     \_\n\
-    \\EOT\EOT\v\ETX\NUL\DC2\ACK\150\EOT\STX\166\EOT\ETX\SUBO Buckets are a set of bucket counts, encoded in a contiguous array\n\
+    \\EOT\EOT\v\ETX\NUL\DC2\ACK\165\EOT\STX\181\EOT\ETX\SUBO Buckets are a set of bucket counts, encoded in a contiguous array\n\
     \ of counts.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\ETX\NUL\SOH\DC2\EOT\150\EOT\n\
+    \\ENQ\EOT\v\ETX\NUL\SOH\DC2\EOT\165\EOT\n\
     \\DC1\n\
     \\162\SOH\n\
-    \\ACK\EOT\v\ETX\NUL\STX\NUL\DC2\EOT\154\EOT\EOT\SYN\SUB\145\SOH Offset is the bucket index of the first entry in the bucket_counts array.\n\
+    \\ACK\EOT\v\ETX\NUL\STX\NUL\DC2\EOT\169\EOT\EOT\SYN\SUB\145\SOH Offset is the bucket index of the first entry in the bucket_counts array.\n\
     \ \n\
     \ Note: This uses a varint encoding as a simple form of compression.\n\
     \\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\NUL\ENQ\DC2\EOT\154\EOT\EOT\n\
+    \\a\EOT\v\ETX\NUL\STX\NUL\ENQ\DC2\EOT\169\EOT\EOT\n\
     \\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\NUL\SOH\DC2\EOT\154\EOT\v\DC1\n\
+    \\a\EOT\v\ETX\NUL\STX\NUL\SOH\DC2\EOT\169\EOT\v\DC1\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\NUL\ETX\DC2\EOT\154\EOT\DC4\NAK\n\
+    \\a\EOT\v\ETX\NUL\STX\NUL\ETX\DC2\EOT\169\EOT\DC4\NAK\n\
     \\187\ETX\n\
-    \\ACK\EOT\v\ETX\NUL\STX\SOH\DC2\EOT\165\EOT\EOT&\SUB\170\ETX bucket_counts is an array of count values, where bucket_counts[i] carries\n\
+    \\ACK\EOT\v\ETX\NUL\STX\SOH\DC2\EOT\180\EOT\EOT&\SUB\170\ETX bucket_counts is an array of count values, where bucket_counts[i] carries\n\
     \ the count of the bucket at index (offset+i). bucket_counts[i] is the count\n\
     \ of values greater than base^(offset+i) and less than or equal to\n\
     \ base^(offset+i+1).\n\
@@ -6691,67 +6796,67 @@ packedFileDescriptor
     \ varint encoding.\n\
     \\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\SOH\EOT\DC2\EOT\165\EOT\EOT\f\n\
+    \\a\EOT\v\ETX\NUL\STX\SOH\EOT\DC2\EOT\180\EOT\EOT\f\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\SOH\ENQ\DC2\EOT\165\EOT\r\DC3\n\
+    \\a\EOT\v\ETX\NUL\STX\SOH\ENQ\DC2\EOT\180\EOT\r\DC3\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\SOH\SOH\DC2\EOT\165\EOT\DC4!\n\
+    \\a\EOT\v\ETX\NUL\STX\SOH\SOH\DC2\EOT\180\EOT\DC4!\n\
     \\SI\n\
-    \\a\EOT\v\ETX\NUL\STX\SOH\ETX\DC2\EOT\165\EOT$%\n\
+    \\a\EOT\v\ETX\NUL\STX\SOH\ETX\DC2\EOT\180\EOT$%\n\
     \}\n\
-    \\EOT\EOT\v\STX\t\DC2\EOT\170\EOT\STX\DC4\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
+    \\EOT\EOT\v\STX\t\DC2\EOT\185\EOT\STX\DC4\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
     \ for the available flags and their meaning.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\t\ENQ\DC2\EOT\170\EOT\STX\b\n\
+    \\ENQ\EOT\v\STX\t\ENQ\DC2\EOT\185\EOT\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\t\SOH\DC2\EOT\170\EOT\t\SO\n\
+    \\ENQ\EOT\v\STX\t\SOH\DC2\EOT\185\EOT\t\SO\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\t\ETX\DC2\EOT\170\EOT\DC1\DC3\n\
+    \\ENQ\EOT\v\STX\t\ETX\DC2\EOT\185\EOT\DC1\DC3\n\
     \o\n\
     \\EOT\EOT\v\STX\n\
-    \\DC2\EOT\174\EOT\STX#\SUBa (Optional) List of exemplars collected from\n\
+    \\DC2\EOT\189\EOT\STX#\SUBa (Optional) List of exemplars collected from\n\
     \ measurements that were used to form the data point\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\v\STX\n\
-    \\EOT\DC2\EOT\174\EOT\STX\n\
+    \\EOT\DC2\EOT\189\EOT\STX\n\
     \\n\
     \\r\n\
     \\ENQ\EOT\v\STX\n\
-    \\ACK\DC2\EOT\174\EOT\v\DC3\n\
+    \\ACK\DC2\EOT\189\EOT\v\DC3\n\
     \\r\n\
     \\ENQ\EOT\v\STX\n\
-    \\SOH\DC2\EOT\174\EOT\DC4\GS\n\
+    \\SOH\DC2\EOT\189\EOT\DC4\GS\n\
     \\r\n\
     \\ENQ\EOT\v\STX\n\
-    \\ETX\DC2\EOT\174\EOT \"\n\
+    \\ETX\DC2\EOT\189\EOT \"\n\
     \E\n\
-    \\EOT\EOT\v\STX\v\DC2\EOT\177\EOT\STX\ESC\SUB7 min is the minimum value over (start_time, end_time].\n\
+    \\EOT\EOT\v\STX\v\DC2\EOT\192\EOT\STX\ESC\SUB7 min is the minimum value over (start_time, end_time].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\v\EOT\DC2\EOT\177\EOT\STX\n\
+    \\ENQ\EOT\v\STX\v\EOT\DC2\EOT\192\EOT\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\v\ENQ\DC2\EOT\177\EOT\v\DC1\n\
+    \\ENQ\EOT\v\STX\v\ENQ\DC2\EOT\192\EOT\v\DC1\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\v\SOH\DC2\EOT\177\EOT\DC2\NAK\n\
+    \\ENQ\EOT\v\STX\v\SOH\DC2\EOT\192\EOT\DC2\NAK\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\v\ETX\DC2\EOT\177\EOT\CAN\SUB\n\
+    \\ENQ\EOT\v\STX\v\ETX\DC2\EOT\192\EOT\CAN\SUB\n\
     \E\n\
-    \\EOT\EOT\v\STX\f\DC2\EOT\180\EOT\STX\ESC\SUB7 max is the maximum value over (start_time, end_time].\n\
+    \\EOT\EOT\v\STX\f\DC2\EOT\195\EOT\STX\ESC\SUB7 max is the maximum value over (start_time, end_time].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\f\EOT\DC2\EOT\180\EOT\STX\n\
+    \\ENQ\EOT\v\STX\f\EOT\DC2\EOT\195\EOT\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\f\ENQ\DC2\EOT\180\EOT\v\DC1\n\
+    \\ENQ\EOT\v\STX\f\ENQ\DC2\EOT\195\EOT\v\DC1\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\f\SOH\DC2\EOT\180\EOT\DC2\NAK\n\
+    \\ENQ\EOT\v\STX\f\SOH\DC2\EOT\195\EOT\DC2\NAK\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\f\ETX\DC2\EOT\180\EOT\CAN\SUB\n\
+    \\ENQ\EOT\v\STX\f\ETX\DC2\EOT\195\EOT\CAN\SUB\n\
     \\229\STX\n\
-    \\EOT\EOT\v\STX\r\DC2\EOT\188\EOT\STX\GS\SUB\214\STX ZeroThreshold may be optionally set to convey the width of the zero\n\
+    \\EOT\EOT\v\STX\r\DC2\EOT\203\EOT\STX\GS\SUB\214\STX ZeroThreshold may be optionally set to convey the width of the zero\n\
     \ region. Where the zero region is defined as the closed interval\n\
     \ [-ZeroThreshold, ZeroThreshold].\n\
     \ When ZeroThreshold is 0, zero count bucket stores values that cannot be\n\
@@ -6759,79 +6864,79 @@ packedFileDescriptor
     \ have been rounded to zero.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\r\ENQ\DC2\EOT\188\EOT\STX\b\n\
+    \\ENQ\EOT\v\STX\r\ENQ\DC2\EOT\203\EOT\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\r\SOH\DC2\EOT\188\EOT\t\ETB\n\
+    \\ENQ\EOT\v\STX\r\SOH\DC2\EOT\203\EOT\t\ETB\n\
     \\r\n\
-    \\ENQ\EOT\v\STX\r\ETX\DC2\EOT\188\EOT\SUB\FS\n\
+    \\ENQ\EOT\v\STX\r\ETX\DC2\EOT\203\EOT\SUB\FS\n\
     \\132\SOH\n\
-    \\STX\EOT\f\DC2\ACK\193\EOT\NUL\254\EOT\SOH\SUBv SummaryDataPoint is a single data point in a timeseries that describes the\n\
+    \\STX\EOT\f\DC2\ACK\208\EOT\NUL\141\ENQ\SOH\SUBv SummaryDataPoint is a single data point in a timeseries that describes the\n\
     \ time-varying values of a Summary metric.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\f\SOH\DC2\EOT\193\EOT\b\CAN\n\
+    \\ETX\EOT\f\SOH\DC2\EOT\208\EOT\b\CAN\n\
     \\v\n\
-    \\ETX\EOT\f\t\DC2\EOT\194\EOT\STX\r\n\
+    \\ETX\EOT\f\t\DC2\EOT\209\EOT\STX\r\n\
     \\f\n\
-    \\EOT\EOT\f\t\NUL\DC2\EOT\194\EOT\v\f\n\
+    \\EOT\EOT\f\t\NUL\DC2\EOT\209\EOT\v\f\n\
     \\r\n\
-    \\ENQ\EOT\f\t\NUL\SOH\DC2\EOT\194\EOT\v\f\n\
+    \\ENQ\EOT\f\t\NUL\SOH\DC2\EOT\209\EOT\v\f\n\
     \\r\n\
-    \\ENQ\EOT\f\t\NUL\STX\DC2\EOT\194\EOT\v\f\n\
+    \\ENQ\EOT\f\t\NUL\STX\DC2\EOT\209\EOT\v\f\n\
     \\136\STX\n\
-    \\EOT\EOT\f\STX\NUL\DC2\EOT\200\EOT\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
+    \\EOT\EOT\f\STX\NUL\DC2\EOT\215\EOT\STXA\SUB\249\SOH The set of key/value pairs that uniquely identify the timeseries from\n\
     \ where this point belongs. The list may be empty (may contain 0 elements).\n\
     \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
     \ attribute with the same key).\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\NUL\EOT\DC2\EOT\200\EOT\STX\n\
+    \\ENQ\EOT\f\STX\NUL\EOT\DC2\EOT\215\EOT\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\NUL\ACK\DC2\EOT\200\EOT\v1\n\
+    \\ENQ\EOT\f\STX\NUL\ACK\DC2\EOT\215\EOT\v1\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\NUL\SOH\DC2\EOT\200\EOT2<\n\
+    \\ENQ\EOT\f\STX\NUL\SOH\DC2\EOT\215\EOT2<\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\NUL\ETX\DC2\EOT\200\EOT?@\n\
+    \\ENQ\EOT\f\STX\NUL\ETX\DC2\EOT\215\EOT?@\n\
     \\197\SOH\n\
-    \\EOT\EOT\f\STX\SOH\DC2\EOT\207\EOT\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
+    \\EOT\EOT\f\STX\SOH\DC2\EOT\222\EOT\STX#\SUB\182\SOH StartTimeUnixNano is optional but strongly encouraged, see the\n\
     \ the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\SOH\ENQ\DC2\EOT\207\EOT\STX\t\n\
+    \\ENQ\EOT\f\STX\SOH\ENQ\DC2\EOT\222\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\SOH\SOH\DC2\EOT\207\EOT\n\
+    \\ENQ\EOT\f\STX\SOH\SOH\DC2\EOT\222\EOT\n\
     \\RS\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\SOH\ETX\DC2\EOT\207\EOT!\"\n\
+    \\ENQ\EOT\f\STX\SOH\ETX\DC2\EOT\222\EOT!\"\n\
     \\163\SOH\n\
-    \\EOT\EOT\f\STX\STX\DC2\EOT\213\EOT\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
+    \\EOT\EOT\f\STX\STX\DC2\EOT\228\EOT\STX\GS\SUB\148\SOH TimeUnixNano is required, see the detailed comments above Metric.\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\STX\ENQ\DC2\EOT\213\EOT\STX\t\n\
+    \\ENQ\EOT\f\STX\STX\ENQ\DC2\EOT\228\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\STX\SOH\DC2\EOT\213\EOT\n\
+    \\ENQ\EOT\f\STX\STX\SOH\DC2\EOT\228\EOT\n\
     \\CAN\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\STX\ETX\DC2\EOT\213\EOT\ESC\FS\n\
+    \\ENQ\EOT\f\STX\STX\ETX\DC2\EOT\228\EOT\ESC\FS\n\
     \V\n\
-    \\EOT\EOT\f\STX\ETX\DC2\EOT\216\EOT\STX\DC4\SUBH count is the number of values in the population. Must be non-negative.\n\
+    \\EOT\EOT\f\STX\ETX\DC2\EOT\231\EOT\STX\DC4\SUBH count is the number of values in the population. Must be non-negative.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ETX\ENQ\DC2\EOT\216\EOT\STX\t\n\
+    \\ENQ\EOT\f\STX\ETX\ENQ\DC2\EOT\231\EOT\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ETX\SOH\DC2\EOT\216\EOT\n\
+    \\ENQ\EOT\f\STX\ETX\SOH\DC2\EOT\231\EOT\n\
     \\SI\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ETX\ETX\DC2\EOT\216\EOT\DC2\DC3\n\
+    \\ENQ\EOT\f\STX\ETX\ETX\DC2\EOT\231\EOT\DC2\DC3\n\
     \\243\ETX\n\
-    \\EOT\EOT\f\STX\EOT\DC2\EOT\226\EOT\STX\DC1\SUB\228\ETX sum of the values in the population. If count is zero then this field\n\
+    \\EOT\EOT\f\STX\EOT\DC2\EOT\241\EOT\STX\DC1\SUB\228\ETX sum of the values in the population. If count is zero then this field\n\
     \ must be zero.\n\
     \\n\
     \ Note: Sum should only be filled out when measuring non-negative discrete\n\
@@ -6841,13 +6946,13 @@ packedFileDescriptor
     \ see: https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#summary\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\EOT\ENQ\DC2\EOT\226\EOT\STX\b\n\
+    \\ENQ\EOT\f\STX\EOT\ENQ\DC2\EOT\241\EOT\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\EOT\SOH\DC2\EOT\226\EOT\t\f\n\
+    \\ENQ\EOT\f\STX\EOT\SOH\DC2\EOT\241\EOT\t\f\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\EOT\ETX\DC2\EOT\226\EOT\SI\DLE\n\
+    \\ENQ\EOT\f\STX\EOT\ETX\DC2\EOT\241\EOT\SI\DLE\n\
     \\253\STX\n\
-    \\EOT\EOT\f\ETX\NUL\DC2\ACK\236\EOT\STX\245\EOT\ETX\SUB\236\STX Represents the value at a given quantile of a distribution.\n\
+    \\EOT\EOT\f\ETX\NUL\DC2\ACK\251\EOT\STX\132\ENQ\ETX\SUB\236\STX Represents the value at a given quantile of a distribution.\n\
     \\n\
     \ To record Min and Max values following conventions are used:\n\
     \ - The 1.0 quantile is equivalent to the maximum value observed.\n\
@@ -6857,140 +6962,140 @@ packedFileDescriptor
     \ https://github.com/open-telemetry/opentelemetry-proto/issues/125\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\ETX\NUL\SOH\DC2\EOT\236\EOT\n\
+    \\ENQ\EOT\f\ETX\NUL\SOH\DC2\EOT\251\EOT\n\
     \\EM\n\
     \V\n\
-    \\ACK\EOT\f\ETX\NUL\STX\NUL\DC2\EOT\239\EOT\EOT\CAN\SUBF The quantile of a distribution. Must be in the interval\n\
+    \\ACK\EOT\f\ETX\NUL\STX\NUL\DC2\EOT\254\EOT\EOT\CAN\SUBF The quantile of a distribution. Must be in the interval\n\
     \ [0.0, 1.0].\n\
     \\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\NUL\ENQ\DC2\EOT\239\EOT\EOT\n\
+    \\a\EOT\f\ETX\NUL\STX\NUL\ENQ\DC2\EOT\254\EOT\EOT\n\
     \\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\NUL\SOH\DC2\EOT\239\EOT\v\DC3\n\
+    \\a\EOT\f\ETX\NUL\STX\NUL\SOH\DC2\EOT\254\EOT\v\DC3\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\NUL\ETX\DC2\EOT\239\EOT\SYN\ETB\n\
+    \\a\EOT\f\ETX\NUL\STX\NUL\ETX\DC2\EOT\254\EOT\SYN\ETB\n\
     \l\n\
-    \\ACK\EOT\f\ETX\NUL\STX\SOH\DC2\EOT\244\EOT\EOT\NAK\SUB\\ The value at the given quantile of a distribution.\n\
+    \\ACK\EOT\f\ETX\NUL\STX\SOH\DC2\EOT\131\ENQ\EOT\NAK\SUB\\ The value at the given quantile of a distribution.\n\
     \\n\
     \ Quantile values must NOT be negative.\n\
     \\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\SOH\ENQ\DC2\EOT\244\EOT\EOT\n\
+    \\a\EOT\f\ETX\NUL\STX\SOH\ENQ\DC2\EOT\131\ENQ\EOT\n\
     \\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\SOH\SOH\DC2\EOT\244\EOT\v\DLE\n\
+    \\a\EOT\f\ETX\NUL\STX\SOH\SOH\DC2\EOT\131\ENQ\v\DLE\n\
     \\SI\n\
-    \\a\EOT\f\ETX\NUL\STX\SOH\ETX\DC2\EOT\244\EOT\DC3\DC4\n\
+    \\a\EOT\f\ETX\NUL\STX\SOH\ETX\DC2\EOT\131\ENQ\DC3\DC4\n\
     \\167\SOH\n\
-    \\EOT\EOT\f\STX\ENQ\DC2\EOT\249\EOT\STX/\SUB\152\SOH (Optional) list of values at different quantiles of the distribution calculated\n\
+    \\EOT\EOT\f\STX\ENQ\DC2\EOT\136\ENQ\STX/\SUB\152\SOH (Optional) list of values at different quantiles of the distribution calculated\n\
     \ from the current snapshot. The quantiles must be strictly increasing.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ENQ\EOT\DC2\EOT\249\EOT\STX\n\
+    \\ENQ\EOT\f\STX\ENQ\EOT\DC2\EOT\136\ENQ\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ENQ\ACK\DC2\EOT\249\EOT\v\SUB\n\
+    \\ENQ\EOT\f\STX\ENQ\ACK\DC2\EOT\136\ENQ\v\SUB\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ENQ\SOH\DC2\EOT\249\EOT\ESC*\n\
+    \\ENQ\EOT\f\STX\ENQ\SOH\DC2\EOT\136\ENQ\ESC*\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ENQ\ETX\DC2\EOT\249\EOT-.\n\
+    \\ENQ\EOT\f\STX\ENQ\ETX\DC2\EOT\136\ENQ-.\n\
     \}\n\
-    \\EOT\EOT\f\STX\ACK\DC2\EOT\253\EOT\STX\DC3\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
+    \\EOT\EOT\f\STX\ACK\DC2\EOT\140\ENQ\STX\DC3\SUBo Flags that apply to this specific data point.  See DataPointFlags\n\
     \ for the available flags and their meaning.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ACK\ENQ\DC2\EOT\253\EOT\STX\b\n\
+    \\ENQ\EOT\f\STX\ACK\ENQ\DC2\EOT\140\ENQ\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ACK\SOH\DC2\EOT\253\EOT\t\SO\n\
+    \\ENQ\EOT\f\STX\ACK\SOH\DC2\EOT\140\ENQ\t\SO\n\
     \\r\n\
-    \\ENQ\EOT\f\STX\ACK\ETX\DC2\EOT\253\EOT\DC1\DC2\n\
+    \\ENQ\EOT\f\STX\ACK\ETX\DC2\EOT\140\ENQ\DC1\DC2\n\
     \\135\STX\n\
-    \\STX\EOT\r\DC2\ACK\132\ENQ\NUL\163\ENQ\SOH\SUB\248\SOH A representation of an exemplar, which is a sample input measurement.\n\
+    \\STX\EOT\r\DC2\ACK\147\ENQ\NUL\178\ENQ\SOH\SUB\248\SOH A representation of an exemplar, which is a sample input measurement.\n\
     \ Exemplars also hold information about the environment when the measurement\n\
     \ was recorded, for example the span and trace ID of the active span when the\n\
     \ exemplar was recorded.\n\
     \\n\
     \\v\n\
-    \\ETX\EOT\r\SOH\DC2\EOT\132\ENQ\b\DLE\n\
+    \\ETX\EOT\r\SOH\DC2\EOT\147\ENQ\b\DLE\n\
     \\v\n\
-    \\ETX\EOT\r\t\DC2\EOT\133\ENQ\STX\r\n\
+    \\ETX\EOT\r\t\DC2\EOT\148\ENQ\STX\r\n\
     \\f\n\
-    \\EOT\EOT\r\t\NUL\DC2\EOT\133\ENQ\v\f\n\
+    \\EOT\EOT\r\t\NUL\DC2\EOT\148\ENQ\v\f\n\
     \\r\n\
-    \\ENQ\EOT\r\t\NUL\SOH\DC2\EOT\133\ENQ\v\f\n\
+    \\ENQ\EOT\r\t\NUL\SOH\DC2\EOT\148\ENQ\v\f\n\
     \\r\n\
-    \\ENQ\EOT\r\t\NUL\STX\DC2\EOT\133\ENQ\v\f\n\
+    \\ENQ\EOT\r\t\NUL\STX\DC2\EOT\148\ENQ\v\f\n\
     \\217\SOH\n\
-    \\EOT\EOT\r\STX\NUL\DC2\EOT\138\ENQ\STXJ\SUB\202\SOH The set of key/value pairs that were filtered out by the aggregator, but\n\
+    \\EOT\EOT\r\STX\NUL\DC2\EOT\153\ENQ\STXJ\SUB\202\SOH The set of key/value pairs that were filtered out by the aggregator, but\n\
     \ recorded alongside the original measurement. Only key/value pairs that were\n\
     \ filtered out by the aggregator should be included\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\NUL\EOT\DC2\EOT\138\ENQ\STX\n\
+    \\ENQ\EOT\r\STX\NUL\EOT\DC2\EOT\153\ENQ\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\NUL\ACK\DC2\EOT\138\ENQ\v1\n\
+    \\ENQ\EOT\r\STX\NUL\ACK\DC2\EOT\153\ENQ\v1\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\NUL\SOH\DC2\EOT\138\ENQ2E\n\
+    \\ENQ\EOT\r\STX\NUL\SOH\DC2\EOT\153\ENQ2E\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\NUL\ETX\DC2\EOT\138\ENQHI\n\
+    \\ENQ\EOT\r\STX\NUL\ETX\DC2\EOT\153\ENQHI\n\
     \\162\SOH\n\
-    \\EOT\EOT\r\STX\SOH\DC2\EOT\144\ENQ\STX\GS\SUB\147\SOH time_unix_nano is the exact time when this exemplar was recorded\n\
+    \\EOT\EOT\r\STX\SOH\DC2\EOT\159\ENQ\STX\GS\SUB\147\SOH time_unix_nano is the exact time when this exemplar was recorded\n\
     \\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January\n\
     \ 1970.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\SOH\ENQ\DC2\EOT\144\ENQ\STX\t\n\
+    \\ENQ\EOT\r\STX\SOH\ENQ\DC2\EOT\159\ENQ\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\SOH\SOH\DC2\EOT\144\ENQ\n\
+    \\ENQ\EOT\r\STX\SOH\SOH\DC2\EOT\159\ENQ\n\
     \\CAN\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\SOH\ETX\DC2\EOT\144\ENQ\ESC\FS\n\
+    \\ENQ\EOT\r\STX\SOH\ETX\DC2\EOT\159\ENQ\ESC\FS\n\
     \\176\SOH\n\
-    \\EOT\EOT\r\b\NUL\DC2\ACK\149\ENQ\STX\152\ENQ\ETX\SUB\159\SOH The value of the measurement that was recorded. An exemplar is\n\
+    \\EOT\EOT\r\b\NUL\DC2\ACK\164\ENQ\STX\167\ENQ\ETX\SUB\159\SOH The value of the measurement that was recorded. An exemplar is\n\
     \ considered invalid when one of the recognized value fields is not present\n\
     \ inside this oneof.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\b\NUL\SOH\DC2\EOT\149\ENQ\b\r\n\
+    \\ENQ\EOT\r\b\NUL\SOH\DC2\EOT\164\ENQ\b\r\n\
     \\f\n\
-    \\EOT\EOT\r\STX\STX\DC2\EOT\150\ENQ\EOT\EM\n\
+    \\EOT\EOT\r\STX\STX\DC2\EOT\165\ENQ\EOT\EM\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\STX\ENQ\DC2\EOT\150\ENQ\EOT\n\
+    \\ENQ\EOT\r\STX\STX\ENQ\DC2\EOT\165\ENQ\EOT\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\STX\SOH\DC2\EOT\150\ENQ\v\DC4\n\
+    \\ENQ\EOT\r\STX\STX\SOH\DC2\EOT\165\ENQ\v\DC4\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\STX\ETX\DC2\EOT\150\ENQ\ETB\CAN\n\
+    \\ENQ\EOT\r\STX\STX\ETX\DC2\EOT\165\ENQ\ETB\CAN\n\
     \\f\n\
-    \\EOT\EOT\r\STX\ETX\DC2\EOT\151\ENQ\EOT\CAN\n\
+    \\EOT\EOT\r\STX\ETX\DC2\EOT\166\ENQ\EOT\CAN\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ETX\ENQ\DC2\EOT\151\ENQ\EOT\f\n\
+    \\ENQ\EOT\r\STX\ETX\ENQ\DC2\EOT\166\ENQ\EOT\f\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ETX\SOH\DC2\EOT\151\ENQ\r\DC3\n\
+    \\ENQ\EOT\r\STX\ETX\SOH\DC2\EOT\166\ENQ\r\DC3\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ETX\ETX\DC2\EOT\151\ENQ\SYN\ETB\n\
+    \\ENQ\EOT\r\STX\ETX\ETX\DC2\EOT\166\ENQ\SYN\ETB\n\
     \\165\SOH\n\
-    \\EOT\EOT\r\STX\EOT\DC2\EOT\157\ENQ\STX\DC4\SUB\150\SOH (Optional) Span ID of the exemplar trace.\n\
+    \\EOT\EOT\r\STX\EOT\DC2\EOT\172\ENQ\STX\DC4\SUB\150\SOH (Optional) Span ID of the exemplar trace.\n\
     \ span_id may be missing if the measurement is not recorded inside a trace\n\
     \ or if the trace is not sampled.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\EOT\ENQ\DC2\EOT\157\ENQ\STX\a\n\
+    \\ENQ\EOT\r\STX\EOT\ENQ\DC2\EOT\172\ENQ\STX\a\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\EOT\SOH\DC2\EOT\157\ENQ\b\SI\n\
+    \\ENQ\EOT\r\STX\EOT\SOH\DC2\EOT\172\ENQ\b\SI\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\EOT\ETX\DC2\EOT\157\ENQ\DC2\DC3\n\
+    \\ENQ\EOT\r\STX\EOT\ETX\DC2\EOT\172\ENQ\DC2\DC3\n\
     \\167\SOH\n\
-    \\EOT\EOT\r\STX\ENQ\DC2\EOT\162\ENQ\STX\NAK\SUB\152\SOH (Optional) Trace ID of the exemplar trace.\n\
+    \\EOT\EOT\r\STX\ENQ\DC2\EOT\177\ENQ\STX\NAK\SUB\152\SOH (Optional) Trace ID of the exemplar trace.\n\
     \ trace_id may be missing if the measurement is not recorded inside a trace\n\
     \ or if the trace is not sampled.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ENQ\ENQ\DC2\EOT\162\ENQ\STX\a\n\
+    \\ENQ\EOT\r\STX\ENQ\ENQ\DC2\EOT\177\ENQ\STX\a\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ENQ\SOH\DC2\EOT\162\ENQ\b\DLE\n\
+    \\ENQ\EOT\r\STX\ENQ\SOH\DC2\EOT\177\ENQ\b\DLE\n\
     \\r\n\
-    \\ENQ\EOT\r\STX\ENQ\ETX\DC2\EOT\162\ENQ\DC3\DC4b\ACKproto3"
+    \\ENQ\EOT\r\STX\ENQ\ETX\DC2\EOT\177\ENQ\DC3\DC4b\ACKproto3"

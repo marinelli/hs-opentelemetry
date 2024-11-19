@@ -1594,8 +1594,8 @@ packedFileDescriptor
     \\SOLogRecordFlags\DC2\US\n\
     \\ESCLOG_RECORD_FLAGS_DO_NOT_USE\DLE\NUL\DC2&\n\
     \!LOG_RECORD_FLAGS_TRACE_FLAGS_MASK\DLE\255\SOHBs\n\
-    \\RSio.opentelemetry.proto.logs.v1B\tLogsProtoP\SOHZ&go.opentelemetry.io/proto/otlp/logs/v1\170\STX\ESCOpenTelemetry.Proto.Logs.V1J\146B\n\
-    \\a\DC2\ENQ\SO\NUL\202\SOH\SOH\n\
+    \\RSio.opentelemetry.proto.logs.v1B\tLogsProtoP\SOHZ&go.opentelemetry.io/proto/otlp/logs/v1\170\STX\ESCOpenTelemetry.Proto.Logs.V1J\231E\n\
+    \\a\DC2\ENQ\SO\NUL\210\SOH\SOH\n\
     \\200\EOT\n\
     \\SOH\f\DC2\ETX\SO\NUL\DC22\189\EOT Copyright 2020, OpenTelemetry Authors\n\
     \\n\
@@ -1670,7 +1670,7 @@ packedFileDescriptor
     \\f\n\
     \\ENQ\EOT\NUL\STX\NUL\ETX\DC2\ETX+()\n\
     \8\n\
-    \\STX\EOT\SOH\DC2\EOT/\NUL<\SOH\SUB, A collection of ScopeLogs from a Resource.\n\
+    \\STX\EOT\SOH\DC2\EOT/\NUL?\SOH\SUB, A collection of ScopeLogs from a Resource.\n\
     \\n\
     \\n\
     \\n\
@@ -1706,270 +1706,276 @@ packedFileDescriptor
     \\ENQ\EOT\SOH\STX\SOH\SOH\DC2\ETX7\NAK\US\n\
     \\f\n\
     \\ENQ\EOT\SOH\STX\SOH\ETX\DC2\ETX7\"#\n\
-    \\172\SOH\n\
-    \\EOT\EOT\SOH\STX\STX\DC2\ETX;\STX\CAN\SUB\158\SOH This schema_url applies to the data in the \"resource\" field. It does not apply\n\
+    \\245\STX\n\
+    \\EOT\EOT\SOH\STX\STX\DC2\ETX>\STX\CAN\SUB\231\STX The Schema URL, if known. This is the identifier of the Schema that the resource data\n\
+    \ is recorded in. To learn more about Schema URL see\n\
+    \ https://opentelemetry.io/docs/specs/otel/schemas/#schema-url\n\
+    \ This schema_url applies to the data in the \"resource\" field. It does not apply\n\
     \ to the data in the \"scope_logs\" field which have their own schema_url field.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\ENQ\DC2\ETX;\STX\b\n\
+    \\ENQ\EOT\SOH\STX\STX\ENQ\DC2\ETX>\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\SOH\DC2\ETX;\t\DC3\n\
+    \\ENQ\EOT\SOH\STX\STX\SOH\DC2\ETX>\t\DC3\n\
     \\f\n\
-    \\ENQ\EOT\SOH\STX\STX\ETX\DC2\ETX;\SYN\ETB\n\
+    \\ENQ\EOT\SOH\STX\STX\ETX\DC2\ETX>\SYN\ETB\n\
     \7\n\
-    \\STX\EOT\STX\DC2\EOT?\NULJ\SOH\SUB+ A collection of Logs produced by a Scope.\n\
+    \\STX\EOT\STX\DC2\EOTB\NULP\SOH\SUB+ A collection of Logs produced by a Scope.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\EOT\STX\SOH\DC2\ETX?\b\DC1\n\
+    \\ETX\EOT\STX\SOH\DC2\ETXB\b\DC1\n\
     \\204\SOH\n\
-    \\EOT\EOT\STX\STX\NUL\DC2\ETXC\STX?\SUB\190\SOH The instrumentation scope information for the logs in this message.\n\
+    \\EOT\EOT\STX\STX\NUL\DC2\ETXF\STX?\SUB\190\SOH The instrumentation scope information for the logs in this message.\n\
     \ Semantically when InstrumentationScope isn't set, it is equivalent with\n\
     \ an empty instrumentation scope name (unknown).\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETXC\STX4\n\
+    \\ENQ\EOT\STX\STX\NUL\ACK\DC2\ETXF\STX4\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETXC5:\n\
+    \\ENQ\EOT\STX\STX\NUL\SOH\DC2\ETXF5:\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETXC=>\n\
+    \\ENQ\EOT\STX\STX\NUL\ETX\DC2\ETXF=>\n\
     \%\n\
-    \\EOT\EOT\STX\STX\SOH\DC2\ETXF\STX%\SUB\CAN A list of log records.\n\
+    \\EOT\EOT\STX\STX\SOH\DC2\ETXI\STX%\SUB\CAN A list of log records.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\EOT\DC2\ETXF\STX\n\
+    \\ENQ\EOT\STX\STX\SOH\EOT\DC2\ETXI\STX\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETXF\v\DC4\n\
+    \\ENQ\EOT\STX\STX\SOH\ACK\DC2\ETXI\v\DC4\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETXF\NAK \n\
+    \\ENQ\EOT\STX\STX\SOH\SOH\DC2\ETXI\NAK \n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETXF#$\n\
-    \G\n\
-    \\EOT\EOT\STX\STX\STX\DC2\ETXI\STX\CAN\SUB: This schema_url applies to all logs in the \"logs\" field.\n\
+    \\ENQ\EOT\STX\STX\SOH\ETX\DC2\ETXI#$\n\
+    \\140\STX\n\
+    \\EOT\EOT\STX\STX\STX\DC2\ETXO\STX\CAN\SUB\254\SOH The Schema URL, if known. This is the identifier of the Schema that the log data\n\
+    \ is recorded in. To learn more about Schema URL see\n\
+    \ https://opentelemetry.io/docs/specs/otel/schemas/#schema-url\n\
+    \ This schema_url applies to all logs in the \"logs\" field.\n\
     \\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\ENQ\DC2\ETXI\STX\b\n\
+    \\ENQ\EOT\STX\STX\STX\ENQ\DC2\ETXO\STX\b\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\SOH\DC2\ETXI\t\DC3\n\
+    \\ENQ\EOT\STX\STX\STX\SOH\DC2\ETXO\t\DC3\n\
     \\f\n\
-    \\ENQ\EOT\STX\STX\STX\ETX\DC2\ETXI\SYN\ETB\n\
+    \\ENQ\EOT\STX\STX\STX\ETX\DC2\ETXO\SYN\ETB\n\
     \;\n\
-    \\STX\ENQ\NUL\DC2\EOTM\NULh\SOH\SUB/ Possible values for LogRecord.SeverityNumber.\n\
+    \\STX\ENQ\NUL\DC2\EOTS\NULn\SOH\SUB/ Possible values for LogRecord.SeverityNumber.\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\ENQ\NUL\SOH\DC2\ETXM\ENQ\DC3\n\
+    \\ETX\ENQ\NUL\SOH\DC2\ETXS\ENQ\DC3\n\
     \N\n\
-    \\EOT\ENQ\NUL\STX\NUL\DC2\ETXO\STX\"\SUBA UNSPECIFIED is the default SeverityNumber, it MUST NOT be used.\n\
+    \\EOT\ENQ\NUL\STX\NUL\DC2\ETXU\STX\"\SUBA UNSPECIFIED is the default SeverityNumber, it MUST NOT be used.\n\
     \\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\NUL\SOH\DC2\ETXO\STX\GS\n\
+    \\ENQ\ENQ\NUL\STX\NUL\SOH\DC2\ETXU\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\NUL\STX\DC2\ETXO !\n\
+    \\ENQ\ENQ\NUL\STX\NUL\STX\DC2\ETXU !\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\SOH\DC2\ETXP\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\SOH\DC2\ETXV\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SOH\SOH\DC2\ETXP\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\SOH\SOH\DC2\ETXV\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SOH\STX\DC2\ETXP\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\SOH\STX\DC2\ETXV\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\STX\DC2\ETXQ\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\STX\DC2\ETXW\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\STX\SOH\DC2\ETXQ\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\STX\SOH\DC2\ETXW\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\STX\STX\DC2\ETXQ\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\STX\STX\DC2\ETXW\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\ETX\DC2\ETXR\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\ETX\DC2\ETXX\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ETX\SOH\DC2\ETXR\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\ETX\SOH\DC2\ETXX\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ETX\STX\DC2\ETXR\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\ETX\STX\DC2\ETXX\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\EOT\DC2\ETXS\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\EOT\DC2\ETXY\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\EOT\SOH\DC2\ETXS\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\EOT\SOH\DC2\ETXY\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\EOT\STX\DC2\ETXS\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\EOT\STX\DC2\ETXY\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\ENQ\DC2\ETXT\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\ENQ\DC2\ETXZ\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ENQ\SOH\DC2\ETXT\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\ENQ\SOH\DC2\ETXZ\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ENQ\STX\DC2\ETXT\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\ENQ\STX\DC2\ETXZ\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\ACK\DC2\ETXU\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\ACK\DC2\ETX[\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ACK\SOH\DC2\ETXU\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\ACK\SOH\DC2\ETX[\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ACK\STX\DC2\ETXU\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\ACK\STX\DC2\ETX[\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\a\DC2\ETXV\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\a\DC2\ETX\\\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\a\SOH\DC2\ETXV\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\a\SOH\DC2\ETX\\\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\a\STX\DC2\ETXV\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\a\STX\DC2\ETX\\\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\b\DC2\ETXW\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\b\DC2\ETX]\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\b\SOH\DC2\ETXW\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\b\SOH\DC2\ETX]\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\b\STX\DC2\ETXW\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\b\STX\DC2\ETX]\ESC\FS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\t\DC2\ETXX\STX\GS\n\
+    \\EOT\ENQ\NUL\STX\t\DC2\ETX^\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\t\SOH\DC2\ETXX\STX\SYN\n\
+    \\ENQ\ENQ\NUL\STX\t\SOH\DC2\ETX^\STX\SYN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\t\STX\DC2\ETXX\ESC\FS\n\
+    \\ENQ\ENQ\NUL\STX\t\STX\DC2\ETX^\ESC\FS\n\
     \\v\n\
     \\EOT\ENQ\NUL\STX\n\
-    \\DC2\ETXY\STX\RS\n\
+    \\DC2\ETX_\STX\RS\n\
     \\f\n\
     \\ENQ\ENQ\NUL\STX\n\
-    \\SOH\DC2\ETXY\STX\ETB\n\
+    \\SOH\DC2\ETX_\STX\ETB\n\
     \\f\n\
     \\ENQ\ENQ\NUL\STX\n\
-    \\STX\DC2\ETXY\ESC\GS\n\
+    \\STX\DC2\ETX_\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\v\DC2\ETXZ\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\v\DC2\ETX`\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\v\SOH\DC2\ETXZ\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\v\SOH\DC2\ETX`\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\v\STX\DC2\ETXZ\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\v\STX\DC2\ETX`\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\f\DC2\ETX[\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\f\DC2\ETXa\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\f\SOH\DC2\ETX[\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\f\SOH\DC2\ETXa\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\f\STX\DC2\ETX[\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\f\STX\DC2\ETXa\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\r\DC2\ETX\\\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\r\DC2\ETXb\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\r\SOH\DC2\ETX\\\STX\SYN\n\
+    \\ENQ\ENQ\NUL\STX\r\SOH\DC2\ETXb\STX\SYN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\r\STX\DC2\ETX\\\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\r\STX\DC2\ETXb\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\SO\DC2\ETX]\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\SO\DC2\ETXc\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SO\SOH\DC2\ETX]\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\SO\SOH\DC2\ETXc\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SO\STX\DC2\ETX]\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\SO\STX\DC2\ETXc\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\SI\DC2\ETX^\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\SI\DC2\ETXd\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SI\SOH\DC2\ETX^\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\SI\SOH\DC2\ETXd\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SI\STX\DC2\ETX^\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\SI\STX\DC2\ETXd\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\DLE\DC2\ETX_\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\DLE\DC2\ETXe\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DLE\SOH\DC2\ETX_\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\DLE\SOH\DC2\ETXe\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DLE\STX\DC2\ETX_\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\DLE\STX\DC2\ETXe\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\DC1\DC2\ETX`\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\DC1\DC2\ETXf\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC1\SOH\DC2\ETX`\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\DC1\SOH\DC2\ETXf\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC1\STX\DC2\ETX`\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\DC1\STX\DC2\ETXf\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\DC2\DC2\ETXa\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\DC2\DC2\ETXg\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC2\SOH\DC2\ETXa\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\DC2\SOH\DC2\ETXg\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC2\STX\DC2\ETXa\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\DC2\STX\DC2\ETXg\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\DC3\DC2\ETXb\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\DC3\DC2\ETXh\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC3\SOH\DC2\ETXb\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\DC3\SOH\DC2\ETXh\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC3\STX\DC2\ETXb\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\DC3\STX\DC2\ETXh\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\DC4\DC2\ETXc\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\DC4\DC2\ETXi\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC4\SOH\DC2\ETXc\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\DC4\SOH\DC2\ETXi\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\DC4\STX\DC2\ETXc\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\DC4\STX\DC2\ETXi\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\NAK\DC2\ETXd\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\NAK\DC2\ETXj\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\NAK\SOH\DC2\ETXd\STX\ETB\n\
+    \\ENQ\ENQ\NUL\STX\NAK\SOH\DC2\ETXj\STX\ETB\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\NAK\STX\DC2\ETXd\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\NAK\STX\DC2\ETXj\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\SYN\DC2\ETXe\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\SYN\DC2\ETXk\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SYN\SOH\DC2\ETXe\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\SYN\SOH\DC2\ETXk\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\SYN\STX\DC2\ETXe\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\SYN\STX\DC2\ETXk\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\ETB\DC2\ETXf\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\ETB\DC2\ETXl\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ETB\SOH\DC2\ETXf\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\ETB\SOH\DC2\ETXl\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\ETB\STX\DC2\ETXf\ESC\GS\n\
+    \\ENQ\ENQ\NUL\STX\ETB\STX\DC2\ETXl\ESC\GS\n\
     \\v\n\
-    \\EOT\ENQ\NUL\STX\CAN\DC2\ETXg\STX\RS\n\
+    \\EOT\ENQ\NUL\STX\CAN\DC2\ETXm\STX\RS\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\CAN\SOH\DC2\ETXg\STX\CAN\n\
+    \\ENQ\ENQ\NUL\STX\CAN\SOH\DC2\ETXm\STX\CAN\n\
     \\f\n\
-    \\ENQ\ENQ\NUL\STX\CAN\STX\DC2\ETXg\ESC\GS\n\
-    \\153\STX\n\
-    \\STX\ENQ\SOH\DC2\EOTp\NULy\SOH\SUB\140\STX LogRecordFlags is defined as a protobuf 'uint32' type and is to be used as\n\
-    \ bit-fields. Each non-zero value defined in this enum is a bit-mask.\n\
-    \ To extract the bit-field, for example, use an expression like:\n\
+    \\ENQ\ENQ\NUL\STX\CAN\STX\DC2\ETXm\ESC\GS\n\
+    \\217\STX\n\
+    \\STX\ENQ\SOH\DC2\ENQx\NUL\129\SOH\SOH\SUB\203\STX LogRecordFlags represents constants used to interpret the\n\
+    \ LogRecord.flags field, which is protobuf 'fixed32' type and is to\n\
+    \ be used as bit-fields. Each non-zero value defined in this enum is\n\
+    \ a bit-mask.  To extract the bit-field, for example, use an\n\
+    \ expression like:\n\
     \\n\
     \   (logRecord.flags & LOG_RECORD_FLAGS_TRACE_FLAGS_MASK)\n\
     \\n\
     \\n\
     \\n\
     \\n\
-    \\ETX\ENQ\SOH\SOH\DC2\ETXp\ENQ\DC3\n\
+    \\ETX\ENQ\SOH\SOH\DC2\ETXx\ENQ\DC3\n\
     \\149\SOH\n\
-    \\EOT\ENQ\SOH\STX\NUL\DC2\ETXs\STX\"\SUB\135\SOH The zero value for the enum. Should not be used for comparisons.\n\
+    \\EOT\ENQ\SOH\STX\NUL\DC2\ETX{\STX\"\SUB\135\SOH The zero value for the enum. Should not be used for comparisons.\n\
     \ Instead use bitwise \"and\" with the appropriate mask as shown above.\n\
     \\n\
     \\f\n\
-    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\ETXs\STX\GS\n\
+    \\ENQ\ENQ\SOH\STX\NUL\SOH\DC2\ETX{\STX\GS\n\
     \\f\n\
-    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\ETXs !\n\
+    \\ENQ\ENQ\SOH\STX\NUL\STX\DC2\ETX{ !\n\
     \1\n\
-    \\EOT\ENQ\SOH\STX\SOH\DC2\ETXv\STX1\SUB$ Bits 0-7 are used for trace flags.\n\
+    \\EOT\ENQ\SOH\STX\SOH\DC2\ETX~\STX1\SUB$ Bits 0-7 are used for trace flags.\n\
     \\n\
     \\f\n\
-    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\ETXv\STX#\n\
+    \\ENQ\ENQ\SOH\STX\SOH\SOH\DC2\ETX~\STX#\n\
     \\f\n\
-    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\ETXv&0\n\
-    \\155\SOH\n\
-    \\STX\EOT\ETX\DC2\ENQ}\NUL\202\SOH\SOH\SUB\141\SOH A log record according to OpenTelemetry Log Data Model:\n\
+    \\ENQ\ENQ\SOH\STX\SOH\STX\DC2\ETX~&0\n\
+    \\156\SOH\n\
+    \\STX\EOT\ETX\DC2\ACK\133\SOH\NUL\210\SOH\SOH\SUB\141\SOH A log record according to OpenTelemetry Log Data Model:\n\
     \ https://github.com/open-telemetry/oteps/blob/main/text/logs/0097-log-data-model.md\n\
     \\n\
-    \\n\
-    \\n\
-    \\ETX\EOT\ETX\SOH\DC2\ETX}\b\DC1\n\
-    \\n\
-    \\n\
-    \\ETX\EOT\ETX\t\DC2\ETX~\STX\r\n\
     \\v\n\
-    \\EOT\EOT\ETX\t\NUL\DC2\ETX~\v\f\n\
+    \\ETX\EOT\ETX\SOH\DC2\EOT\133\SOH\b\DC1\n\
+    \\v\n\
+    \\ETX\EOT\ETX\t\DC2\EOT\134\SOH\STX\r\n\
     \\f\n\
-    \\ENQ\EOT\ETX\t\NUL\SOH\DC2\ETX~\v\f\n\
-    \\f\n\
-    \\ENQ\EOT\ETX\t\NUL\STX\DC2\ETX~\v\f\n\
+    \\EOT\EOT\ETX\t\NUL\DC2\EOT\134\SOH\v\f\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\t\NUL\SOH\DC2\EOT\134\SOH\v\f\n\
+    \\r\n\
+    \\ENQ\EOT\ETX\t\NUL\STX\DC2\EOT\134\SOH\v\f\n\
     \\199\SOH\n\
-    \\EOT\EOT\ETX\STX\NUL\DC2\EOT\131\SOH\STX\GS\SUB\184\SOH time_unix_nano is the time when the event occurred.\n\
+    \\EOT\EOT\ETX\STX\NUL\DC2\EOT\139\SOH\STX\GS\SUB\184\SOH time_unix_nano is the time when the event occurred.\n\
     \ Value is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January 1970.\n\
     \ Value of 0 indicates unknown or missing timestamp.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\ENQ\DC2\EOT\131\SOH\STX\t\n\
+    \\ENQ\EOT\ETX\STX\NUL\ENQ\DC2\EOT\139\SOH\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\EOT\131\SOH\n\
+    \\ENQ\EOT\ETX\STX\NUL\SOH\DC2\EOT\139\SOH\n\
     \\CAN\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\EOT\131\SOH\ESC\FS\n\
+    \\ENQ\EOT\ETX\STX\NUL\ETX\DC2\EOT\139\SOH\ESC\FS\n\
     \\176\a\n\
-    \\EOT\EOT\ETX\STX\SOH\DC2\EOT\148\SOH\STX'\SUB\161\a Time when the event was observed by the collection system.\n\
+    \\EOT\EOT\ETX\STX\SOH\DC2\EOT\156\SOH\STX'\SUB\161\a Time when the event was observed by the collection system.\n\
     \ For events that originate in OpenTelemetry (e.g. using OpenTelemetry Logging SDK)\n\
     \ this timestamp is typically set at the generation time and is equal to Timestamp.\n\
     \ For events originating externally and collected by OpenTelemetry (e.g. using\n\
@@ -1986,81 +1992,81 @@ packedFileDescriptor
     \ Value of 0 indicates unknown or missing timestamp.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\ENQ\DC2\EOT\148\SOH\STX\t\n\
+    \\ENQ\EOT\ETX\STX\SOH\ENQ\DC2\EOT\156\SOH\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\SOH\DC2\EOT\148\SOH\n\
+    \\ENQ\EOT\ETX\STX\SOH\SOH\DC2\EOT\156\SOH\n\
     \!\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\SOH\ETX\DC2\EOT\148\SOH$&\n\
+    \\ENQ\EOT\ETX\STX\SOH\ETX\DC2\EOT\156\SOH$&\n\
     \o\n\
-    \\EOT\EOT\ETX\STX\STX\DC2\EOT\152\SOH\STX%\SUBa Numerical value of the severity, normalized to values described in Log Data Model.\n\
+    \\EOT\EOT\ETX\STX\STX\DC2\EOT\160\SOH\STX%\SUBa Numerical value of the severity, normalized to values described in Log Data Model.\n\
     \ [Optional].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\ACK\DC2\EOT\152\SOH\STX\DLE\n\
+    \\ENQ\EOT\ETX\STX\STX\ACK\DC2\EOT\160\SOH\STX\DLE\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\SOH\DC2\EOT\152\SOH\DC1 \n\
+    \\ENQ\EOT\ETX\STX\STX\SOH\DC2\EOT\160\SOH\DC1 \n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\STX\ETX\DC2\EOT\152\SOH#$\n\
+    \\ENQ\EOT\ETX\STX\STX\ETX\DC2\EOT\160\SOH#$\n\
     \\138\SOH\n\
-    \\EOT\EOT\ETX\STX\ETX\DC2\EOT\156\SOH\STX\ESC\SUB| The severity text (also known as log level). The original string representation as\n\
+    \\EOT\EOT\ETX\STX\ETX\DC2\EOT\164\SOH\STX\ESC\SUB| The severity text (also known as log level). The original string representation as\n\
     \ it is known at the source. [Optional].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\ENQ\DC2\EOT\156\SOH\STX\b\n\
+    \\ENQ\EOT\ETX\STX\ETX\ENQ\DC2\EOT\164\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\SOH\DC2\EOT\156\SOH\t\SYN\n\
+    \\ENQ\EOT\ETX\STX\ETX\SOH\DC2\EOT\164\SOH\t\SYN\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ETX\ETX\DC2\EOT\156\SOH\EM\SUB\n\
+    \\ENQ\EOT\ETX\STX\ETX\ETX\DC2\EOT\164\SOH\EM\SUB\n\
     \\135\STX\n\
-    \\EOT\EOT\ETX\STX\EOT\DC2\EOT\161\SOH\STX2\SUB\248\SOH A value containing the body of the log record. Can be for example a human-readable\n\
+    \\EOT\EOT\ETX\STX\EOT\DC2\EOT\169\SOH\STX2\SUB\248\SOH A value containing the body of the log record. Can be for example a human-readable\n\
     \ string message (including multi-line) describing the event in a free form or it can\n\
     \ be a structured data composed of arrays and maps of other values. [Optional].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\ACK\DC2\EOT\161\SOH\STX(\n\
+    \\ENQ\EOT\ETX\STX\EOT\ACK\DC2\EOT\169\SOH\STX(\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\SOH\DC2\EOT\161\SOH)-\n\
+    \\ENQ\EOT\ETX\STX\EOT\SOH\DC2\EOT\169\SOH)-\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\EOT\ETX\DC2\EOT\161\SOH01\n\
+    \\ENQ\EOT\ETX\STX\EOT\ETX\DC2\EOT\169\SOH01\n\
     \\198\SOH\n\
-    \\EOT\EOT\ETX\STX\ENQ\DC2\EOT\166\SOH\STXA\SUB\183\SOH Additional attributes that describe the specific event occurrence. [Optional].\n\
+    \\EOT\EOT\ETX\STX\ENQ\DC2\EOT\174\SOH\STXA\SUB\183\SOH Additional attributes that describe the specific event occurrence. [Optional].\n\
     \ Attribute keys MUST be unique (it is not allowed to have more than one\n\
     \ attribute with the same key).\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\EOT\DC2\EOT\166\SOH\STX\n\
+    \\ENQ\EOT\ETX\STX\ENQ\EOT\DC2\EOT\174\SOH\STX\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\ACK\DC2\EOT\166\SOH\v1\n\
+    \\ENQ\EOT\ETX\STX\ENQ\ACK\DC2\EOT\174\SOH\v1\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\SOH\DC2\EOT\166\SOH2<\n\
+    \\ENQ\EOT\ETX\STX\ENQ\SOH\DC2\EOT\174\SOH2<\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ENQ\ETX\DC2\EOT\166\SOH?@\n\
+    \\ENQ\EOT\ETX\STX\ENQ\ETX\DC2\EOT\174\SOH?@\n\
     \\f\n\
-    \\EOT\EOT\ETX\STX\ACK\DC2\EOT\167\SOH\STX&\n\
+    \\EOT\EOT\ETX\STX\ACK\DC2\EOT\175\SOH\STX&\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\ENQ\DC2\EOT\167\SOH\STX\b\n\
+    \\ENQ\EOT\ETX\STX\ACK\ENQ\DC2\EOT\175\SOH\STX\b\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\SOH\DC2\EOT\167\SOH\t!\n\
+    \\ENQ\EOT\ETX\STX\ACK\SOH\DC2\EOT\175\SOH\t!\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\ACK\ETX\DC2\EOT\167\SOH$%\n\
+    \\ENQ\EOT\ETX\STX\ACK\ETX\DC2\EOT\175\SOH$%\n\
     \\255\STX\n\
-    \\EOT\EOT\ETX\STX\a\DC2\EOT\174\SOH\STX\DC4\SUB\240\STX Flags, a bit field. 8 least significant bits are the trace flags as\n\
+    \\EOT\EOT\ETX\STX\a\DC2\EOT\182\SOH\STX\DC4\SUB\240\STX Flags, a bit field. 8 least significant bits are the trace flags as\n\
     \ defined in W3C Trace Context specification. 24 most significant bits are reserved\n\
     \ and must be set to 0. Readers must not assume that 24 most significant bits\n\
     \ will be zero and must correctly mask the bits when reading 8-bit trace flag (use\n\
     \ flags & LOG_RECORD_FLAGS_TRACE_FLAGS_MASK). [Optional].\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\ENQ\DC2\EOT\174\SOH\STX\t\n\
+    \\ENQ\EOT\ETX\STX\a\ENQ\DC2\EOT\182\SOH\STX\t\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\SOH\DC2\EOT\174\SOH\n\
+    \\ENQ\EOT\ETX\STX\a\SOH\DC2\EOT\182\SOH\n\
     \\SI\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\a\ETX\DC2\EOT\174\SOH\DC2\DC3\n\
+    \\ENQ\EOT\ETX\STX\a\ETX\DC2\EOT\182\SOH\DC2\DC3\n\
     \\239\ETX\n\
-    \\EOT\EOT\ETX\STX\b\DC2\EOT\187\SOH\STX\NAK\SUB\224\ETX A unique identifier for a trace. All logs from the same trace share\n\
+    \\EOT\EOT\ETX\STX\b\DC2\EOT\195\SOH\STX\NAK\SUB\224\ETX A unique identifier for a trace. All logs from the same trace share\n\
     \ the same `trace_id`. The ID is a 16-byte array. An ID with all zeroes OR\n\
     \ of length other than 16 bytes is considered invalid (empty string in OTLP/JSON\n\
     \ is zero-length and thus is also invalid).\n\
@@ -2073,13 +2079,13 @@ packedFileDescriptor
     \   - the field contains an invalid value.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\b\ENQ\DC2\EOT\187\SOH\STX\a\n\
+    \\ENQ\EOT\ETX\STX\b\ENQ\DC2\EOT\195\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\b\SOH\DC2\EOT\187\SOH\b\DLE\n\
+    \\ENQ\EOT\ETX\STX\b\SOH\DC2\EOT\195\SOH\b\DLE\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\b\ETX\DC2\EOT\187\SOH\DC3\DC4\n\
+    \\ENQ\EOT\ETX\STX\b\ETX\DC2\EOT\195\SOH\DC3\DC4\n\
     \\189\EOT\n\
-    \\EOT\EOT\ETX\STX\t\DC2\EOT\201\SOH\STX\NAK\SUB\174\EOT A unique identifier for a span within a trace, assigned when the span\n\
+    \\EOT\EOT\ETX\STX\t\DC2\EOT\209\SOH\STX\NAK\SUB\174\EOT A unique identifier for a span within a trace, assigned when the span\n\
     \ is created. The ID is an 8-byte array. An ID with all zeroes OR of length\n\
     \ other than 8 bytes is considered invalid (empty string in OTLP/JSON\n\
     \ is zero-length and thus is also invalid).\n\
@@ -2093,8 +2099,8 @@ packedFileDescriptor
     \   - the field contains an invalid value.\n\
     \\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\t\ENQ\DC2\EOT\201\SOH\STX\a\n\
+    \\ENQ\EOT\ETX\STX\t\ENQ\DC2\EOT\209\SOH\STX\a\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\t\SOH\DC2\EOT\201\SOH\b\SI\n\
+    \\ENQ\EOT\ETX\STX\t\SOH\DC2\EOT\209\SOH\b\SI\n\
     \\r\n\
-    \\ENQ\EOT\ETX\STX\t\ETX\DC2\EOT\201\SOH\DC2\DC4b\ACKproto3"
+    \\ENQ\EOT\ETX\STX\t\ETX\DC2\EOT\209\SOH\DC2\DC4b\ACKproto3"
