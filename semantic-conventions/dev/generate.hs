@@ -2,6 +2,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE GeneralisedNewtypeDeriving #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE StandaloneKindSignatures #-}
@@ -16,7 +17,7 @@ import Data.Functor ((<&>))
 import Data.Int (Int64)
 import qualified Data.Kind as Kind
 import qualified Data.List as List
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, listToMaybe)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Traversable (for)
@@ -24,6 +25,8 @@ import Data.Vector (Vector)
 import qualified Data.Vector as Vector
 import qualified Data.Yaml as Yaml
 import System.Directory (createDirectoryIfMissing)
+import System.Environment (getArgs)
+import System.Exit (die)
 import qualified System.FilePath as FilePath
 import qualified System.FilePath.Glob as Glob
 import System.IO (IOMode (WriteMode), hPutStrLn, hSetNewlineMode, noNewlineTranslation, stderr, withFile)
@@ -36,6 +39,7 @@ import Prelude (
   IO,
   Int,
   Maybe (Just, Nothing),
+  Monad ((>>=)),
   MonadFail (fail),
   Monoid (mempty),
   Ord,
@@ -485,10 +489,15 @@ main = generate "src/OpenTelemetry/SemanticConventions.hs"
 generate :: FilePath -> IO ()
 generate targetFile = do
   let
-    yamlPattern = Glob.compile "model/model/**/*.y*ml"
+    yamlPattern :: Glob.Pattern
+    yamlPattern = Glob.compile "**/*.yaml"
     targetDirectory :: FilePath
     targetDirectory = FilePath.takeDirectory targetFile
-  yamlFiles <- Glob.globDir1 yamlPattern "."
+  semconvDir <-
+    listToMaybe <$> getArgs >>= \case
+      Nothing -> die "Missing input directory"
+      Just dir -> pure dir
+  yamlFiles <- Glob.globDir1 yamlPattern semconvDir
   when (List.null yamlFiles) $ fail "no YAML files found"
   models <-
     for yamlFiles $ \yamlFile -> do
@@ -698,4 +707,4 @@ fieldLine a f = maybe [] (\b -> ["", f b]) a
 
 
 printLog :: String -> IO ()
-printLog message = hPutStrLn stderr $ "Setup.hs: " ++ message
+printLog message = hPutStrLn stderr $ "generate.hs: " ++ message
